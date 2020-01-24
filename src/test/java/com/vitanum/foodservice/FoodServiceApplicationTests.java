@@ -8,6 +8,7 @@ class FoodServiceApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// TODO add something here?
 	}
 
 }
