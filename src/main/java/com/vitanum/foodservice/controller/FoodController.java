@@ -66,7 +66,11 @@ public class FoodController {
                 {
                     Map next = (Map) it.next();
 
-                   // List<String> list = (List<String>)next.get("foods");
+                   List<Map<String, String>> list = (List<Map<String, String>>) next.get("foods");
+
+                   for(Map map : list) {
+                       System.out.println(map.get("description") + " ndbNumber " + map.get("ndbNumber"));
+                   }
                     //System.out.println("Uite " + list);
 
                     //for(String f : list) {
