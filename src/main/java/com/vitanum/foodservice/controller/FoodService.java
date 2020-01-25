@@ -12,7 +12,9 @@
  *
  */
 
-package com.vitanum.foodservice.food;
+package com.vitanum.foodservice.controller;
+
+import com.vitanum.foodservice.entities.Food;
 
 import java.util.List;
 
@@ -20,5 +22,5 @@ public interface FoodService {
 
     List<Food> getFoodByName(String foodSearchKeyword);
 
-    Food getFoodNutritionValue(String foodDbNo);
+    Food getFoodNutritionValue(Food theFood);
 }

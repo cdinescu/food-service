@@ -14,50 +14,20 @@
 
 package com.vitanum.foodservice;
 
-import com.vitanum.foodservice.food.Food;
-import com.vitanum.foodservice.food.FoodService;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 class FoodServiceApplicationTests {
-    @Autowired
-    private FoodService foodService;
-
     @Value("${max.results.per.query}")
     private Integer maxResultsPerQuery;
 
     @Test
     void contextLoads() {
         assertEquals(5, maxResultsPerQuery);
-    }
-
-    @Test
-    public void testGetFoods() {
-        // Arrange and Act
-        List<Food> retrievedFoods = foodService.getFoodByName("banana");
-
-        // Assert
-        assertNotNull(retrievedFoods);
-        assertEquals(maxResultsPerQuery, retrievedFoods.size());
-        retrievedFoods.stream().allMatch(food -> "banana".equals(food.getName().toLowerCase()));
-    }
-
-    @Test
-    public void testGetFoodsWithDummyName() {
-        // Arrange and Act
-        List<Food> retrievedFoods = foodService.getFoodByName("dummy food");
-
-        // Assert
-        assertNotNull(retrievedFoods);
-        assertEquals(0, retrievedFoods.size());
     }
 
 }

@@ -12,11 +12,13 @@
  *
  */
 
-package com.vitanum.foodservice.food;
+package com.vitanum.foodservice.controller;
 
+import com.vitanum.foodservice.entities.Food;
+import com.vitanum.foodservice.entities.Nutrient;
 import com.vitanum.foodservice.http.utils.HttpUtils;
 import com.vitanum.foodservice.response.parser.FoodJsonParser;
-import com.vitanum.foodservice.uricomponent.builder.UriComponentBuilderUtils;
+import com.vitanum.foodservice.utils.UriComponentBuilderUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -36,23 +38,23 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public List<Food> getFoodByName(String foodSearchKeyword) {
         HttpHeaders headers = HttpUtils.createHttpHeader();
-
         UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentsBuilderForFoodSearch(foodSearchKeyword);
-        String body = getResponse(headers, builder);
 
-        return FoodJsonParser.extractFoodFromJson(body);
+        return FoodJsonParser.extractFoodFromJson(getResponse(headers, builder));
     }
 
     @Override
-    public Food getFoodNutritionValue(String foodDbNo) {
+    public Food getFoodNutritionValue(Food theFood) {
         HttpHeaders headers = HttpUtils.createHttpHeader();
-
-        UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentBuilderForFoodReport(foodDbNo);
+        UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentBuilderForFoodReport(theFood.getNdbNo());
         String body = getResponse(headers, builder);
 
-        System.out.print(body);
+        //System.out.print(body);
+        List<Nutrient> allNutrients = FoodJsonParser.extractNutrientsFromJson(body);
+        theFood.addNutrientValues(allNutrients);
+        System.out.println(theFood);
 
-        return null;
+        return theFood;
     }
 
     private String getResponse(HttpHeaders headers, UriComponentsBuilder builder) {

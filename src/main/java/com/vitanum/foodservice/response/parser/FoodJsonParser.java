@@ -17,7 +17,8 @@ package com.vitanum.foodservice.response.parser;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vitanum.foodservice.food.Food;
+import com.vitanum.foodservice.entities.Food;
+import com.vitanum.foodservice.entities.Nutrient;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -69,5 +70,42 @@ public class FoodJsonParser {
             // System.out.println(foodName + "--- " + ndbno);
             result.add(new Food(foodName, ndbno));
         }
+    }
+
+    public static List<Nutrient> extractNutrientsFromJson(String body) {
+        List<Nutrient> allNutrients = new ArrayList<>();
+
+        MappingIterator<Map> mapMappingIterator = null;
+        try {
+            mapMappingIterator = new ObjectMapper().readValues(
+                    new JsonFactory().createParser(body), Map.class);
+
+            for (Iterator it = mapMappingIterator; it.hasNext(); ) {
+                Map next = (Map) it.next();
+                Map<String, Object> list = (Map<String, Object>) next.get("report");
+
+                Map<String, Object> food = (Map<String, Object>) list.get("food");
+
+                List<Map<String, Object>> nutrients = (List<Map<String, Object>>) food.get("nutrients");
+
+                //System.out.println("Nutri:---- " + nutrients);
+                nutrients.stream().forEach(nutrientsMap -> {
+                    String nutrientId = (String) nutrientsMap.get("nutrient_id");
+                    String nutrientName = (String) nutrientsMap.get("name");
+                    String unit = (String) nutrientsMap.get("unit");
+                    Double amount = Double.valueOf((String) nutrientsMap.get("value"));
+                    // List<Map<String, String> measures = (Map<String, String>) nutrientsMap.get("measures");
+
+                    Nutrient nutrient = new Nutrient(nutrientId, nutrientName, amount, unit);
+                    //nutrient.setMeasures(measures);
+
+                    allNutrients.add(nutrient);
+                });
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return allNutrients;
     }
 }

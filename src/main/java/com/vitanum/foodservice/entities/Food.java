@@ -12,7 +12,7 @@
  *
  */
 
-package com.vitanum.foodservice.food;
+package com.vitanum.foodservice.entities;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,7 +23,7 @@ public class Food {
 
     private String ndbNo;
 
-    private Map<String, NutrientValue> nutrientIdToValueMap = new LinkedHashMap<>();
+    private Map<String, Nutrient> nutrientIdToValueMap = new LinkedHashMap<>();
 
     public Food(String name, String ndbNo) {
         this.name = name;
@@ -38,19 +38,19 @@ public class Food {
         return ndbNo;
     }
 
-    public Map<String, NutrientValue> getNutrientIdToValueMap() {
+    public Map<String, Nutrient> getNutrientIdToValueMap() {
         return nutrientIdToValueMap;
     }
 
-    public void addNutrientValues(List<NutrientValue> nutrientValues) {
+    public void addNutrientValues(List<Nutrient> nutrientValues) {
         if (nutrientValues != null) {
-            for (NutrientValue nutrientValue : nutrientValues) {
+            for (Nutrient nutrientValue : nutrientValues) {
                 this.addNutrientValue(nutrientValue);
             }
         }
     }
 
-    public void addNutrientValue(NutrientValue nutrientValue) {
+    public void addNutrientValue(Nutrient nutrientValue) {
         this.nutrientIdToValueMap.computeIfAbsent(nutrientValue.getNutrientId(), (id) -> nutrientValue);
     }
 

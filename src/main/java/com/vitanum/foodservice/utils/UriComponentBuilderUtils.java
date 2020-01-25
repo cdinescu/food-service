@@ -12,7 +12,7 @@
  *
  */
 
-package com.vitanum.foodservice.uricomponent.builder;
+package com.vitanum.foodservice.utils;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.util.UriComponentsBuilder;

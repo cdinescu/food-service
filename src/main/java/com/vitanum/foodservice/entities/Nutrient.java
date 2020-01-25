@@ -12,21 +12,34 @@
  *
  */
 
-package com.vitanum.foodservice.food;
+package com.vitanum.foodservice.entities;
 
-public class NutrientValue {
+import java.util.HashMap;
+import java.util.Map;
+
+public class Nutrient {
     private String nutrientId;
+    private String nutrientName;
     private Double amount;
     private String unit;
+    private Map<String, String> measures;
 
-    public NutrientValue(String nutrientId, Double amount, String unit) {
+    //TODO add Builder
+    public Nutrient(String nutrientId, String nutrientName, Double amount, String unit) {
         this.nutrientId = nutrientId;
+        this.nutrientName = nutrientName;
         this.amount = amount;
         this.unit = unit;
+
+        this.measures = new HashMap<>();
     }
 
     public String getNutrientId() {
         return nutrientId;
+    }
+
+    public String getNutrientName() {
+        return nutrientName;
     }
 
     public Double getAmount() {
@@ -37,12 +50,22 @@ public class NutrientValue {
         return unit;
     }
 
+    public Map<String, String> getMeasures() {
+        return measures;
+    }
+
+    public void setMeasures(Map<String, String> measures) {
+        this.measures = measures;
+    }
+
     @Override
     public String toString() {
-        return "NutrientValue{" +
+        return "Nutrient{" +
                 "nutrientId='" + nutrientId + '\'' +
+                ", nutrientName='" + nutrientName + '\'' +
                 ", amount=" + amount +
                 ", unit='" + unit + '\'' +
+                ", measures=" + measures +
                 '}';
     }
 }

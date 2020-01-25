@@ -14,9 +14,9 @@
 
 package com.vitanum.foodservice;
 
-import com.vitanum.foodservice.food.FoodService;
-import com.vitanum.foodservice.food.FoodServiceImpl;
-import com.vitanum.foodservice.uricomponent.builder.UriComponentBuilderUtils;
+import com.vitanum.foodservice.controller.FoodService;
+import com.vitanum.foodservice.controller.FoodServiceImpl;
+import com.vitanum.foodservice.utils.UriComponentBuilderUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

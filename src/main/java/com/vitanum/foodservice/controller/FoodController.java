@@ -14,12 +14,9 @@
 
 package com.vitanum.foodservice.controller;
 
-import com.vitanum.foodservice.food.FoodService;
+import com.vitanum.foodservice.entities.Food;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/foods")
@@ -33,8 +30,7 @@ public class FoodController {
     }
 
     @GetMapping("/reports")
-    public void getNutrition(@RequestParam String ndbno) {
-        foodService.getFoodNutritionValue(ndbno);
+    public void getNutrition(@RequestBody Food theFood) {
+        foodService.getFoodNutritionValue(theFood);
     }
-
 }
