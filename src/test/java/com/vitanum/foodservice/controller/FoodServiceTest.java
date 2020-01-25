@@ -17,6 +17,8 @@ package com.vitanum.foodservice.controller;
 import com.vitanum.foodservice.entities.Food;
 import com.vitanum.foodservice.entities.Nutrient;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +30,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class FoodServiceTest {
+    private static final Logger LOG = LoggerFactory.getLogger(FoodServiceTest.class);
+
     @Value("${max.results.per.query}")
     private Integer maxResultsPerQuery;
 
@@ -59,6 +63,8 @@ public class FoodServiceTest {
     public void testGetFoodNutrients() {
         // Arrange
         Food theFood = new Food("banana", "09041");
+        LOG.info("Food instance before: {}", theFood);
+
         assertNotNull(theFood.getNutrientIdToValueMap());
         assertEquals(0, theFood.getNutrientIdToValueMap().size());
 
@@ -66,10 +72,12 @@ public class FoodServiceTest {
         foodService.getFoodNutritionValue(theFood);
 
         // Assert
+        LOG.info("Food instance after: {}", theFood);
+
         Map<String, Nutrient> nutrientIdToValueMap = theFood.getNutrientIdToValueMap();
         assertNotNull(nutrientIdToValueMap);
         assertFalse(nutrientIdToValueMap.isEmpty());
 
-        nutrientIdToValueMap.keySet().stream().forEach(s -> System.out.println(nutrientIdToValueMap.get(s)));
+        nutrientIdToValueMap.entrySet().stream().forEach(entry -> LOG.info("Nutrient {}", entry.getValue()));
     }
 }

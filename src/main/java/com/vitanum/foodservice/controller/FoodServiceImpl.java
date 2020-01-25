@@ -28,7 +28,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
+// TODO make the REST call reactive!
 public class FoodServiceImpl implements FoodService {
+
     @Autowired
     private RestTemplate restTemplate;
 
@@ -47,12 +49,9 @@ public class FoodServiceImpl implements FoodService {
     public Food getFoodNutritionValue(Food theFood) {
         HttpHeaders headers = HttpUtils.createHttpHeader();
         UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentBuilderForFoodReport(theFood.getNdbNo());
-        String body = getResponse(headers, builder);
 
-        //System.out.print(body);
-        List<Nutrient> allNutrients = FoodJsonParser.extractNutrientsFromJson(body);
+        List<Nutrient> allNutrients = FoodJsonParser.extractNutrientsFromJson(getResponse(headers, builder));
         theFood.addNutrientValues(allNutrients);
-        System.out.println(theFood);
 
         return theFood;
     }

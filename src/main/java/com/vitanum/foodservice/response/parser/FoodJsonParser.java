@@ -19,6 +19,8 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vitanum.foodservice.entities.Food;
 import com.vitanum.foodservice.entities.Nutrient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FoodJsonParser {
+    private static final Logger LOG = LoggerFactory.getLogger(FoodJsonParser.class);
 
     private FoodJsonParser() {
 
@@ -96,7 +99,7 @@ public class FoodJsonParser {
                     Double amount = Double.valueOf((String) nutrientsMap.get("value"));
                     // List<Map<String, String> measures = (Map<String, String>) nutrientsMap.get("measures");
 
-                    Nutrient nutrient = new Nutrient(nutrientId, nutrientName, amount, unit);
+                    Nutrient nutrient = new Nutrient.NutrientBuilder().setNutrientId(nutrientId).setNutrientName(nutrientName).setUnit(unit).setAmount(amount).build();
                     //nutrient.setMeasures(measures);
 
                     allNutrients.add(nutrient);

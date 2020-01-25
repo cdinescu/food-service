@@ -24,12 +24,11 @@ public class Nutrient {
     private String unit;
     private Map<String, String> measures;
 
-    //TODO add Builder
-    public Nutrient(String nutrientId, String nutrientName, Double amount, String unit) {
-        this.nutrientId = nutrientId;
-        this.nutrientName = nutrientName;
-        this.amount = amount;
-        this.unit = unit;
+    public Nutrient(NutrientBuilder theNutrientBuilder) {
+        this.nutrientId = theNutrientBuilder.nutrientId;
+        this.nutrientName = theNutrientBuilder.nutrientName;
+        this.amount = theNutrientBuilder.amount;
+        this.unit = theNutrientBuilder.unit;
 
         this.measures = new HashMap<>();
     }
@@ -67,5 +66,36 @@ public class Nutrient {
                 ", unit='" + unit + '\'' +
                 ", measures=" + measures +
                 '}';
+    }
+
+    public static class NutrientBuilder {
+        private String nutrientId;
+        private String nutrientName;
+        private Double amount;
+        private String unit;
+
+        public NutrientBuilder setNutrientId(String nutrientId) {
+            this.nutrientId = nutrientId;
+            return this;
+        }
+
+        public NutrientBuilder setAmount(Double amount) {
+            this.amount = amount;
+            return this;
+        }
+
+        public NutrientBuilder setUnit(String unit) {
+            this.unit = unit;
+            return this;
+        }
+
+        public NutrientBuilder setNutrientName(String nutrientName) {
+            this.nutrientName = nutrientName;
+            return this;
+        }
+
+        public Nutrient build() {
+            return new Nutrient(this);
+        }
     }
 }
