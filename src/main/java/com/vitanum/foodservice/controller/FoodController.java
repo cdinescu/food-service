@@ -1,13 +1,9 @@
 package com.vitanum.foodservice.controller;
 
 import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.net.httpserver.HttpsConfigurator;
-import com.sun.net.httpserver.HttpsParameters;
-import com.vitanum.foodservice.food.Food;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -21,11 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.net.ssl.SSLParameters;
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -38,6 +31,12 @@ public class FoodController {
     @Value("${api.key}")
     private String foodServiceApiKey;
 
+    @Value("${max.results.per.query}")
+    private Integer maxResultsPerQuery;
+
+    @Value("${response.format}")
+    private String responseFormat;
+
     @Autowired
     private RestTemplate restTemplate;
 
@@ -45,10 +44,17 @@ public class FoodController {
     public void getFoodByGeneralSearchInput(@RequestParam String searchInput) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.add("x-api-key", foodServiceApiKey);
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(foodSearchServiceURL).queryParam("generalSearchInput", searchInput);
+        UriComponentsBuilder builder =
+                UriComponentsBuilder.fromHttpUrl(foodSearchServiceURL)
+                        .queryParam("format", responseFormat)
+                        .queryParam("q", searchInput)
+                        .queryParam("max", maxResultsPerQuery)
+                        .queryParam("offset", 0)
+                        .queryParam("api_key", foodServiceApiKey);
 
+
+        System.out.println(builder.toUriString());
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
         HttpEntity<String> response = restTemplate.exchange(
@@ -61,27 +67,20 @@ public class FoodController {
         System.out.println(body);
 
         try {
-            for (Iterator it = new ObjectMapper().readValues(
-                    new JsonFactory().createJsonParser(body), Map.class); it.hasNext();)
-                {
-                    Map next = (Map) it.next();
+            MappingIterator<Map> mapMappingIterator = new ObjectMapper().readValues(
+                    new JsonFactory().createParser(body), Map.class);
+            for (Iterator it = mapMappingIterator; it.hasNext(); ) {
+                Map next = (Map) it.next();
 
-                   List<Map<String, String>> list = (List<Map<String, String>>) next.get("foods");
-
-                   for(Map map : list) {
-                       System.out.println(map.get("description") + " ndbNumber " + map.get("ndbNumber"));
-                   }
-                    //System.out.println("Uite " + list);
-
-                    //for(String f : list) {
-                   //     System.out.println("My Food: " + f);
-                   // }
-                }
+                Map<String, Object> list = (Map<String, Object>) next.get("list");
+                System.out.println("...................... " + list.get("item"));
+            }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
 }
