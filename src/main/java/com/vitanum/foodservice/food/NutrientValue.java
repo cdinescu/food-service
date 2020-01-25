@@ -29,24 +29,12 @@ public class NutrientValue {
         return nutrientId;
     }
 
-    public void setNutrientId(String nutrientId) {
-        this.nutrientId = nutrientId;
-    }
-
     public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-
     public String getUnit() {
         return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
     }
 
     @Override

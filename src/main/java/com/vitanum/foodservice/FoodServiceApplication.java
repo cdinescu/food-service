@@ -16,6 +16,7 @@ package com.vitanum.foodservice;
 
 import com.vitanum.foodservice.food.FoodService;
 import com.vitanum.foodservice.food.FoodServiceImpl;
+import com.vitanum.foodservice.uricomponent.builder.UriComponentBuilderUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -38,4 +39,8 @@ public class FoodServiceApplication {
         return new FoodServiceImpl();
     }
 
+    @Bean
+    UriComponentBuilderUtils uriBuilder() {
+        return new UriComponentBuilderUtils();
+    }
 }

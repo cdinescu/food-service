@@ -12,32 +12,21 @@
  *
  */
 
-package com.vitanum.foodservice.food;
+package com.vitanum.foodservice.http.utils;
 
-public class Nutrient {
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
-    private String id;
-    private String name;
+public class HttpUtils {
 
-    public Nutrient(String id, String name) {
-        this.id = id;
-        this.name = name;
+    private HttpUtils() {
+
     }
 
-    public String getId() {
-        return id;
-    }
+    public static HttpHeaders createHttpHeader() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String toString() {
-        return "Nutrient{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                '}';
+        return headers;
     }
 }

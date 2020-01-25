@@ -14,58 +14,45 @@
 
 package com.vitanum.foodservice.food;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.databind.MappingIterator;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vitanum.foodservice.http.utils.HttpUtils;
+import com.vitanum.foodservice.response.parser.FoodJsonParser;
+import com.vitanum.foodservice.uricomponent.builder.UriComponentBuilderUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class FoodServiceImpl implements FoodService {
-    @Value("${usda.search.url}")
-    private String foodSearchServiceURL;
-
-    @Value("${api.key}")
-    private String foodServiceApiKey;
-
-    @Value("${max.results.per.query}")
-    private Integer maxResultsPerQuery;
-
-    @Value("${response.format}")
-    private String responseFormat;
-
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private UriComponentBuilderUtils uriComponentBuilderUtils;
+
     @Override
     public List<Food> getFoodByName(String foodSearchKeyword) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpHeaders headers = HttpUtils.createHttpHeader();
 
-        UriComponentsBuilder builder = getUriComponentsBuilder(foodSearchKeyword);
+        UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentsBuilderForFoodSearch(foodSearchKeyword);
         String body = getResponse(headers, builder);
 
-        return extractFoodFromJson(body);
+        return FoodJsonParser.extractFoodFromJson(body);
     }
 
-    private UriComponentsBuilder getUriComponentsBuilder(String foodSearchKeyword) {
-        return UriComponentsBuilder.fromHttpUrl(foodSearchServiceURL + "/search")
-                .queryParam("format", responseFormat)
-                .queryParam("q", foodSearchKeyword)
-                .queryParam("max", maxResultsPerQuery)
-                .queryParam("offset", 0)
-                .queryParam("api_key", foodServiceApiKey);
+    @Override
+    public Food getFoodNutritionValue(String foodDbNo) {
+        HttpHeaders headers = HttpUtils.createHttpHeader();
+
+        UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentBuilderForFoodReport(foodDbNo);
+        String body = getResponse(headers, builder);
+
+        System.out.print(body);
+
+        return null;
     }
 
     private String getResponse(HttpHeaders headers, UriComponentsBuilder builder) {
@@ -78,51 +65,5 @@ public class FoodServiceImpl implements FoodService {
                 String.class);
 
         return response.getBody();
-    }
-
-    private List<Food> extractFoodFromJson(String body) {
-        List<Food> result = new ArrayList<>();
-
-        try {
-            MappingIterator<Map> mapMappingIterator = new ObjectMapper().readValues(
-                    new JsonFactory().createParser(body), Map.class);
-            for (Iterator it = mapMappingIterator; it.hasNext(); ) {
-                Map next = (Map) it.next();
-                Map<String, Object> list = (Map<String, Object>) next.get("list");
-
-                fetchFoodFromItems(result, list);
-            }
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-
-        return result;
-    }
-
-    private void fetchFoodFromItems(List<Food> result, Map<String, Object> list) {
-        List<Map<String, String>> item = (List<Map<String, String>>) list.get("item");
-
-        for (Map<String, String> map : item) {
-            String foodName = map.get("name");
-            String ndbno = map.get("ndbno");
-            // System.out.println(foodName + "--- " + ndbno);
-            result.add(new Food(foodName, ndbno));
-        }
-    }
-
-    @Override
-    public Food getFoodNutritionValue(String foodDbNo) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(foodSearchServiceURL + "/reports")
-                .queryParam("format", responseFormat)
-                .queryParam("ndbno", foodDbNo)
-                .queryParam("api_key", foodServiceApiKey);
-        String body = getResponse(headers, builder);
-
-        System.out.print(body);
-
-        return null;
     }
 }
