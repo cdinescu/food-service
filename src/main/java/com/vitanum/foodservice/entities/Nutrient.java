@@ -14,23 +14,21 @@
 
 package com.vitanum.foodservice.entities;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class Nutrient {
     private String nutrientId;
     private String nutrientName;
     private Double amount;
     private String unit;
-    private Map<String, String> measures;
+    private List<Measurement> measurements;
 
     public Nutrient(NutrientBuilder theNutrientBuilder) {
         this.nutrientId = theNutrientBuilder.nutrientId;
         this.nutrientName = theNutrientBuilder.nutrientName;
         this.amount = theNutrientBuilder.amount;
         this.unit = theNutrientBuilder.unit;
-
-        this.measures = new HashMap<>();
+        this.measurements = theNutrientBuilder.measurements;
     }
 
     public String getNutrientId() {
@@ -49,12 +47,8 @@ public class Nutrient {
         return unit;
     }
 
-    public Map<String, String> getMeasures() {
-        return measures;
-    }
-
-    public void setMeasures(Map<String, String> measures) {
-        this.measures = measures;
+    public List<Measurement> getMeasures() {
+        return measurements;
     }
 
     @Override
@@ -64,15 +58,16 @@ public class Nutrient {
                 ", nutrientName='" + nutrientName + '\'' +
                 ", amount=" + amount +
                 ", unit='" + unit + '\'' +
-                ", measures=" + measures +
+                ", measurements=" + measurements +
                 '}';
     }
 
     public static class NutrientBuilder {
-        private String nutrientId;
-        private String nutrientName;
-        private Double amount;
-        private String unit;
+        String nutrientId;
+        String nutrientName;
+        Double amount;
+        String unit;
+        List<Measurement> measurements;
 
         public NutrientBuilder setNutrientId(String nutrientId) {
             this.nutrientId = nutrientId;
@@ -94,8 +89,14 @@ public class Nutrient {
             return this;
         }
 
+        public NutrientBuilder setMeasurements(List<Measurement> measurements) {
+            this.measurements = measurements;
+            return this;
+        }
+
         public Nutrient build() {
             return new Nutrient(this);
         }
     }
+
 }

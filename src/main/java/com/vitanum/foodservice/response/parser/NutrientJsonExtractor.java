@@ -15,6 +15,7 @@
 package com.vitanum.foodservice.response.parser;
 
 import com.fasterxml.jackson.databind.MappingIterator;
+import com.vitanum.foodservice.entities.Measurement;
 import com.vitanum.foodservice.entities.Nutrient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,10 +60,16 @@ public class NutrientJsonExtractor {
         String nutrientName = (String) nutrientsMap.get("name");
         String unit = (String) nutrientsMap.get("unit");
         Double amount = Double.valueOf((String) nutrientsMap.get("value"));
-        // List<Map<String, String> measures = (Map<String, String>) nutrientsMap.get("measures");
 
-        Nutrient nutrient = new Nutrient.NutrientBuilder().setNutrientId(nutrientId).setNutrientName(nutrientName).setUnit(unit).setAmount(amount).build();
-        //nutrient.setMeasures(measures);
+        List<Measurement> measures = (List<Measurement>) nutrientsMap.get("measures");
+        System.out.println("MEASURES " + measures);
+        Nutrient nutrient = new Nutrient.NutrientBuilder()
+                .setNutrientId(nutrientId)
+                .setNutrientName(nutrientName)
+                .setUnit(unit)
+                .setAmount(amount)
+                .setMeasurements(measures)
+                .build();
 
         allNutrients.add(nutrient);
     }
