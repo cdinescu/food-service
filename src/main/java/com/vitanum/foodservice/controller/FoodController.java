@@ -16,7 +16,11 @@ package com.vitanum.foodservice.controller;
 
 import com.vitanum.foodservice.entities.Food;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/foods")
@@ -30,8 +34,10 @@ public class FoodController {
      * @param foodSearchKeyword the search keyword
      */
     @GetMapping("/search")
-    public void getFoodByGeneralSearchInput(@RequestParam String foodSearchKeyword) {
-        foodService.getFoodByName(foodSearchKeyword);
+    public ResponseEntity<List<Food>> getFoodByGeneralSearchInput(@RequestParam String foodSearchKeyword) {
+        List<Food> foodByName = foodService.getFoodByName(foodSearchKeyword);
+        HttpStatus status = foodByName.isEmpty() ? HttpStatus.NOT_FOUND : HttpStatus.OK;
+        return new ResponseEntity<>(foodByName, status);
     }
 
     /**
@@ -40,7 +46,7 @@ public class FoodController {
      * @param theFood the food whose nutrients are retrieved
      */
     @GetMapping("/reports")
-    public void getNutrition(@RequestBody Food theFood) {
-        foodService.getFoodNutritionValue(theFood);
+    public ResponseEntity<Food> getNutrition(@RequestBody Food theFood) {
+        return new ResponseEntity<>(foodService.getFoodNutritionValue(theFood), HttpStatus.OK);
     }
 }

@@ -15,13 +15,16 @@
 package com.vitanum.foodservice.controller;
 
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
-@WebFluxTest(FoodServiceControllerTest.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FoodServiceControllerTest {
     @Autowired
     private WebTestClient client;
@@ -39,8 +42,7 @@ public class FoodServiceControllerTest {
                 .expectBody();
     }
 
-    // @Ignore
-    //@Test
+    @Test
     public void testGetFoodByGeneralSearchInputWhenFoodNotFound() {
         client.get()
                 .uri(uriBuilder -> uriBuilder
@@ -49,6 +51,18 @@ public class FoodServiceControllerTest {
                 .accept(APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isNotFound()
+                .expectHeader().contentType(APPLICATION_JSON)
+                .expectBody();
+    }
+
+    //@Test
+    public void testGetFoodNutrient() {
+        client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/foods/reports").build())
+                .accept(APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
                 .expectHeader().contentType(APPLICATION_JSON)
                 .expectBody();
     }
