@@ -26,6 +26,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FoodServiceControllerTest {
+    public static final String BANANA_DB_IDX = "09041";
     @Autowired
     private WebTestClient client;
 
@@ -55,16 +56,44 @@ public class FoodServiceControllerTest {
                 .expectBody();
     }
 
-    //@Test
-    public void testGetFoodNutrient() {
+    @Test
+    public void testGetFoodNutrients() {
         client.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/foods/reports").build())
+                        .path("/foods/reports")
+                        .queryParam("ndbNo", BANANA_DB_IDX).build())
                 .accept(APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(APPLICATION_JSON)
                 .expectBody();
     }
+
+    @Test
+    public void testGetFoodNutrientsWhenFoodIndexHasWrongFormat() {
+        client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/foods/reports")
+                        .queryParam("ndbNo", "random").build())
+                .accept(APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectHeader().contentType(APPLICATION_JSON)
+                .expectBody();
+    }
+
+    @Test
+    public void testGetFoodNutrientsWhenFoodIndexNotFoundInDB() {
+        client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/foods/reports")
+                        .queryParam("ndbNo", "99999").build())
+                .accept(APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectHeader().contentType(APPLICATION_JSON)
+                .expectBody();
+    }
+
 
 }

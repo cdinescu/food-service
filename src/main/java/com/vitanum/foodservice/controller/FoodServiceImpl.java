@@ -23,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -42,29 +44,30 @@ public class FoodServiceImpl implements FoodService {
         HttpHeaders headers = HttpUtils.createHttpHeader();
         UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentsBuilderForFoodSearch(foodSearchKeyword);
 
-        return FoodJsonParser.extractFoodFromJson(getResponse(headers, builder));
+        return FoodJsonParser.extractFoodFromJson(getResponse(headers, builder).getBody());
     }
 
     @Override
-    public Food getFoodNutritionValue(Food theFood) {
+    public List<Nutrient> getFoodNutritionValue(String ndbNo) {
         HttpHeaders headers = HttpUtils.createHttpHeader();
-        UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentBuilderForFoodReport(theFood.getNdbNo());
+        UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentBuilderForFoodReport(ndbNo);
 
-        List<Nutrient> allNutrients = FoodJsonParser.extractNutrientsFromJson(getResponse(headers, builder));
-        theFood.addNutrientValues(allNutrients);
-
-        return theFood;
+        return FoodJsonParser.extractNutrientsFromJson(getResponse(headers, builder));
     }
 
-    private String getResponse(HttpHeaders headers, UriComponentsBuilder builder) {
+    private ResponseEntity<String> getResponse(HttpHeaders headers, UriComponentsBuilder builder) {
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
-        HttpEntity<String> response = restTemplate.exchange(
-                builder.toUriString(),
-                HttpMethod.GET,
-                entity,
-                String.class);
+        try {
+            return restTemplate.exchange(
+                    builder.toUriString(),
+                    HttpMethod.GET,
+                    entity,
+                    String.class);
 
-        return response.getBody();
+        } catch (HttpStatusCodeException theException) {
+            return ResponseEntity.status(theException.getRawStatusCode()).headers(theException.getResponseHeaders())
+                    .body(theException.getResponseBodyAsString());
+        }
     }
 }

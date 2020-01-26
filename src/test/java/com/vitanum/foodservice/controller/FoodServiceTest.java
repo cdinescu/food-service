@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -61,23 +60,13 @@ public class FoodServiceTest {
 
     @Test
     public void testGetFoodNutrients() {
-        // Arrange
-        Food theFood = new Food("banana", "09041");
-        LOG.info("Food instance before: {}", theFood);
-
-        assertNotNull(theFood.getNutrientIdToValueMap());
-        assertEquals(0, theFood.getNutrientIdToValueMap().size());
-
         // Act
-        foodService.getFoodNutritionValue(theFood);
+        List<Nutrient> foodNutrients = foodService.getFoodNutritionValue("09041");
 
         // Assert
-        LOG.info("Food instance after: {}", theFood);
+        assertNotNull(foodNutrients);
+        assertFalse(foodNutrients.isEmpty());
 
-        Map<String, Nutrient> nutrientIdToValueMap = theFood.getNutrientIdToValueMap();
-        assertNotNull(nutrientIdToValueMap);
-        assertFalse(nutrientIdToValueMap.isEmpty());
-
-        nutrientIdToValueMap.entrySet().stream().forEach(entry -> LOG.info("Nutrient {}", entry.getValue()));
+        foodNutrients.forEach(nutrient -> LOG.info("Nutrient {}", nutrient));
     }
 }

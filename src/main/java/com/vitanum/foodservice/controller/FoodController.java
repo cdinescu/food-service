@@ -15,10 +15,14 @@
 package com.vitanum.foodservice.controller;
 
 import com.vitanum.foodservice.entities.Food;
+import com.vitanum.foodservice.entities.Nutrient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -36,17 +40,21 @@ public class FoodController {
     @GetMapping("/search")
     public ResponseEntity<List<Food>> getFoodByGeneralSearchInput(@RequestParam String foodSearchKeyword) {
         List<Food> foodByName = foodService.getFoodByName(foodSearchKeyword);
-        HttpStatus status = foodByName.isEmpty() ? HttpStatus.NOT_FOUND : HttpStatus.OK;
-        return new ResponseEntity<>(foodByName, status);
+        return new ResponseEntity<>(foodByName, getHttpStatusBasedOnResult(foodByName));
     }
 
     /**
-     * Set the nutrients values to a food that is being provided in the HTTP request body
+     * fetches the nutrients of a food, bu using its unique database index.
      *
-     * @param theFood the food whose nutrients are retrieved
+     * @param ndbNo the food unique identifier (as found in the USDA)
      */
     @GetMapping("/reports")
-    public ResponseEntity<Food> getNutrition(@RequestBody Food theFood) {
-        return new ResponseEntity<>(foodService.getFoodNutritionValue(theFood), HttpStatus.OK);
+    public ResponseEntity<List<Nutrient>> getNutrition(@RequestParam String ndbNo) {
+        List<Nutrient> foodNutrients = foodService.getFoodNutritionValue(ndbNo);
+        return new ResponseEntity<>(foodNutrients, getHttpStatusBasedOnResult(foodNutrients));
+    }
+
+    private HttpStatus getHttpStatusBasedOnResult(List<?> list) {
+        return list != null && list.isEmpty() ? HttpStatus.NOT_FOUND : HttpStatus.OK;
     }
 }

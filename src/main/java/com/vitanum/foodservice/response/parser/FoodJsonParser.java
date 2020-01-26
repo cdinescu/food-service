@@ -21,6 +21,8 @@ import com.vitanum.foodservice.entities.Food;
 import com.vitanum.foodservice.entities.Nutrient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,7 +41,6 @@ public class FoodJsonParser {
         List<Food> result = new ArrayList<>();
 
         if (body == null || body.isEmpty()) {
-            // TODO create an exception which will later translate to error 404.
             return result;
         }
 
@@ -62,7 +63,6 @@ public class FoodJsonParser {
 
     private static void fetchFoodFromItems(List<Food> result, Map<String, Object> list) {
         if (list == null || list.isEmpty()) {
-            // TODO create exception
             return;
         }
 
@@ -76,8 +76,14 @@ public class FoodJsonParser {
         }
     }
 
-    public static List<Nutrient> extractNutrientsFromJson(String body) {
+    public static List<Nutrient> extractNutrientsFromJson(ResponseEntity<String> response) {
         List<Nutrient> allNutrients = new ArrayList<>();
+
+        if (response.getStatusCode() != HttpStatus.OK || !response.hasBody()) {
+            return allNutrients;
+        }
+        System.out.println("-----" + response);
+        String body = response.getBody();
 
         MappingIterator<Map> mapMappingIterator = null;
         try {
@@ -92,7 +98,6 @@ public class FoodJsonParser {
 
                 List<Map<String, Object>> nutrients = (List<Map<String, Object>>) food.get("nutrients");
 
-                //System.out.println("Nutri:---- " + nutrients);
                 nutrients.forEach(nutrientsMap -> {
                     String nutrientId = (String) nutrientsMap.get("nutrient_id");
                     String nutrientName = (String) nutrientsMap.get("name");

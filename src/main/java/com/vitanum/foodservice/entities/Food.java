@@ -14,16 +14,10 @@
 
 package com.vitanum.foodservice.entities;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 public class Food {
     private String name;
 
     private String ndbNo;
-
-    private Map<String, Nutrient> nutrientIdToValueMap = new LinkedHashMap<>();
 
     public Food(String name, String ndbNo) {
         this.name = name;
@@ -38,29 +32,4 @@ public class Food {
         return ndbNo;
     }
 
-    public Map<String, Nutrient> getNutrientIdToValueMap() {
-        return nutrientIdToValueMap;
-    }
-
-    public void addNutrientValues(List<Nutrient> nutrientValues) {
-        if (nutrientValues != null) {
-            for (Nutrient nutrientValue : nutrientValues) {
-                this.addNutrientValue(nutrientValue);
-            }
-        }
-    }
-
-    public void addNutrientValue(Nutrient nutrientValue) {
-        this.nutrientIdToValueMap.putIfAbsent(nutrientValue.getNutrientId(), nutrientValue);
-    }
-
-
-    @Override
-    public String toString() {
-        return "Food{" +
-                "name='" + name + '\'' +
-                ", ndbNo='" + ndbNo + '\'' +
-                ", nutrientIdToValueMap=" + nutrientIdToValueMap +
-                '}';
-    }
 }
