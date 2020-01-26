@@ -17,6 +17,7 @@ package com.vitanum.foodservice.response.parser;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.vitanum.foodservice.entities.Measurement;
 import com.vitanum.foodservice.entities.Nutrient;
+import com.vitanum.foodservice.exeptions.NullResponseBodyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,12 +34,16 @@ public class NutrientJsonExtractor {
     }
 
     public static List<Nutrient> getNutrients(List<Nutrient> allNutrients, String body) {
+        System.out.println(body);
+
+        //JsonNode jsonInput =;
+        //JsonSchemaFactory.byDefault().getValidator().validate();
         try {
             MappingIterator<Map> mapMappingIterator = JsonUtils.getMapMappingIterator(body);
 
             extractNutrientsFromResponse(allNutrients, mapMappingIterator);
-        } catch (IOException exception) {
-            LOG.error("Failed to extract food: ", exception);
+        } catch (IOException | NullResponseBodyException exception) {
+            LOG.error("Failed to extract nutrients: ", exception);
         }
         return allNutrients;
     }

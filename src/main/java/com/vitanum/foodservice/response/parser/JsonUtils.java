@@ -17,6 +17,7 @@ package com.vitanum.foodservice.response.parser;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vitanum.foodservice.exeptions.NullResponseBodyException;
 
 import java.io.IOException;
 import java.util.Map;
@@ -27,7 +28,10 @@ public class JsonUtils {
 
     }
 
-    public static MappingIterator<Map> getMapMappingIterator(String body) throws IOException {
+    public static MappingIterator<Map> getMapMappingIterator(String body) throws IOException, NullResponseBodyException {
+        if (body == null) {
+            throw new NullResponseBodyException("The response body is null!");
+        }
         return new ObjectMapper().readValues(
                 new JsonFactory().createParser(body), Map.class);
     }

@@ -16,6 +16,7 @@ package com.vitanum.foodservice.response.parser;
 
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.vitanum.foodservice.entities.Food;
+import com.vitanum.foodservice.exeptions.NullResponseBodyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +37,7 @@ public class FoodJsonExtractor {
             MappingIterator<Map> mapMappingIterator = JsonUtils.getMapMappingIterator(body);
 
             extractFoodListFromResponse(allFoods, mapMappingIterator);
-        } catch (IOException exception) {
+        } catch (IOException | NullResponseBodyException exception) {
             LOG.error("Failed to extract food: ", exception);
         }
 
