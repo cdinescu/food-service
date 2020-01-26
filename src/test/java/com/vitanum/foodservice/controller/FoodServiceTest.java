@@ -45,7 +45,8 @@ public class FoodServiceTest {
         // Assert
         assertNotNull(retrievedFoods);
         assertEquals(maxResultsPerQuery, retrievedFoods.size());
-        retrievedFoods.stream().allMatch(food -> "banana".equals(food.getName().toLowerCase()));
+        boolean allMatch = retrievedFoods.stream().allMatch(food -> food.getName().toLowerCase().contains("banana"));
+        assertTrue(allMatch);
     }
 
     @Test

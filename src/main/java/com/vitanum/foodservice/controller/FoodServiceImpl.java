@@ -30,7 +30,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
-// TODO make the REST call reactive!
 public class FoodServiceImpl implements FoodService {
 
     @Autowired
