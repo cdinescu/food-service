@@ -51,7 +51,7 @@ public class Food {
     }
 
     public void addNutrientValue(Nutrient nutrientValue) {
-        this.nutrientIdToValueMap.computeIfAbsent(nutrientValue.getNutrientId(), (id) -> nutrientValue);
+        this.nutrientIdToValueMap.putIfAbsent(nutrientValue.getNutrientId(), nutrientValue);
     }
 
 

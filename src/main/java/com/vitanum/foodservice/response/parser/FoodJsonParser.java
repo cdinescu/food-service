@@ -44,7 +44,8 @@ public class FoodJsonParser {
         }
 
         try {
-            MappingIterator<Map> mapMappingIterator = new ObjectMapper().readValues(
+            MappingIterator<Map> mapMappingIterator;
+            mapMappingIterator = new ObjectMapper().readValues(
                     new JsonFactory().createParser(body), Map.class);
             for (Iterator it = mapMappingIterator; it.hasNext(); ) {
                 Map next = (Map) it.next();
@@ -92,7 +93,7 @@ public class FoodJsonParser {
                 List<Map<String, Object>> nutrients = (List<Map<String, Object>>) food.get("nutrients");
 
                 //System.out.println("Nutri:---- " + nutrients);
-                nutrients.stream().forEach(nutrientsMap -> {
+                nutrients.forEach(nutrientsMap -> {
                     String nutrientId = (String) nutrientsMap.get("nutrient_id");
                     String nutrientName = (String) nutrientsMap.get("name");
                     String unit = (String) nutrientsMap.get("unit");

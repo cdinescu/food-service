@@ -15,7 +15,8 @@
 package com.vitanum.foodservice.http.utils;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 public class HttpUtils {
 
@@ -25,7 +26,7 @@ public class HttpUtils {
 
     public static HttpHeaders createHttpHeader() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setContentType(APPLICATION_JSON);
 
         return headers;
     }

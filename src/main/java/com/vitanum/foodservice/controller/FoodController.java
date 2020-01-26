@@ -24,11 +24,21 @@ public class FoodController {
     @Autowired
     private FoodService foodService;
 
+    /**
+     * Search a certain food by providing an input string
+     *
+     * @param foodSearchKeyword the search keyword
+     */
     @GetMapping("/search")
     public void getFoodByGeneralSearchInput(@RequestParam String foodSearchKeyword) {
         foodService.getFoodByName(foodSearchKeyword);
     }
 
+    /**
+     * Set the nutrients values to a food that is being provided in the HTTP request body
+     *
+     * @param theFood the food whose nutrients are retrieved
+     */
     @GetMapping("/reports")
     public void getNutrition(@RequestBody Food theFood) {
         foodService.getFoodNutritionValue(theFood);
