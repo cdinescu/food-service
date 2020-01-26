@@ -14,107 +14,44 @@
 
 package com.vitanum.foodservice.response.parser;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.databind.MappingIterator;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vitanum.foodservice.entities.Food;
 import com.vitanum.foodservice.entities.Nutrient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class FoodJsonParser {
-    private static final Logger LOG = LoggerFactory.getLogger(FoodJsonParser.class);
 
     private FoodJsonParser() {
 
     }
 
-    public static List<Food> extractFoodFromJson(String body) {
-        List<Food> result = new ArrayList<>();
+    public static List<Food> extractFoodFromJson(ResponseEntity<String> response) {
+        List<Food> allFoods = new ArrayList<>();
 
-        if (body == null || body.isEmpty()) {
-            return result;
+        if (isResponseNok(response)) {
+            return allFoods;
         }
 
-        try {
-            MappingIterator<Map> mapMappingIterator;
-            mapMappingIterator = new ObjectMapper().readValues(
-                    new JsonFactory().createParser(body), Map.class);
-            for (Iterator it = mapMappingIterator; it.hasNext(); ) {
-                Map next = (Map) it.next();
-                Map<String, Object> list = (Map<String, Object>) next.get("list");
-
-                fetchFoodFromItems(result, list);
-            }
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-
-        return result;
+        return FoodJsonExtractor.getFoods(allFoods, response.getBody());
     }
 
-    private static void fetchFoodFromItems(List<Food> result, Map<String, Object> list) {
-        if (list == null || list.isEmpty()) {
-            return;
-        }
-
-        List<Map<String, String>> item = (List<Map<String, String>>) list.get("item");
-
-        for (Map<String, String> map : item) {
-            String foodName = map.get("name");
-            String ndbno = map.get("ndbno");
-            // System.out.println(foodName + "--- " + ndbno);
-            result.add(new Food(foodName, ndbno));
-        }
-    }
 
     public static List<Nutrient> extractNutrientsFromJson(ResponseEntity<String> response) {
         List<Nutrient> allNutrients = new ArrayList<>();
 
-        if (response.getStatusCode() != HttpStatus.OK || !response.hasBody()) {
+        if (isResponseNok(response)) {
             return allNutrients;
         }
-        System.out.println("-----" + response);
-        String body = response.getBody();
 
-        MappingIterator<Map> mapMappingIterator = null;
-        try {
-            mapMappingIterator = new ObjectMapper().readValues(
-                    new JsonFactory().createParser(body), Map.class);
-
-            for (Iterator it = mapMappingIterator; it.hasNext(); ) {
-                Map next = (Map) it.next();
-                Map<String, Object> list = (Map<String, Object>) next.get("report");
-
-                Map<String, Object> food = (Map<String, Object>) list.get("food");
-
-                List<Map<String, Object>> nutrients = (List<Map<String, Object>>) food.get("nutrients");
-
-                nutrients.forEach(nutrientsMap -> {
-                    String nutrientId = (String) nutrientsMap.get("nutrient_id");
-                    String nutrientName = (String) nutrientsMap.get("name");
-                    String unit = (String) nutrientsMap.get("unit");
-                    Double amount = Double.valueOf((String) nutrientsMap.get("value"));
-                    // List<Map<String, String> measures = (Map<String, String>) nutrientsMap.get("measures");
-
-                    Nutrient nutrient = new Nutrient.NutrientBuilder().setNutrientId(nutrientId).setNutrientName(nutrientName).setUnit(unit).setAmount(amount).build();
-                    //nutrient.setMeasures(measures);
-
-                    allNutrients.add(nutrient);
-                });
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return allNutrients;
+        return NutrientJsonExtractor.getNutrients(allNutrients, response.getBody());
     }
+
+    private static boolean isResponseNok(ResponseEntity<String> response) {
+        return response.getStatusCode() != HttpStatus.OK || !response.hasBody();
+    }
+
+
 }

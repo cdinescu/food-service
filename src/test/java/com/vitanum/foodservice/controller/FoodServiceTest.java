@@ -16,6 +16,7 @@ package com.vitanum.foodservice.controller;
 
 import com.vitanum.foodservice.entities.Food;
 import com.vitanum.foodservice.entities.Nutrient;
+import com.vitanum.foodservice.exeptions.ImproperRequestException;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ public class FoodServiceTest {
     private FoodService foodService;
 
     @Test
-    public void testGetFoods() {
+    public void testGetFoods() throws ImproperRequestException {
         // Arrange and Act
         List<Food> retrievedFoods = foodService.getFoodByName("banana");
 
@@ -50,7 +51,7 @@ public class FoodServiceTest {
     }
 
     @Test
-    public void testGetFoodsWithDummyName() {
+    public void testGetFoodsWithDummyName() throws ImproperRequestException {
         // Arrange and Act
         List<Food> retrievedFoods = foodService.getFoodByName("dummy food");
 
@@ -60,7 +61,7 @@ public class FoodServiceTest {
     }
 
     @Test
-    public void testGetFoodNutrients() {
+    public void testGetFoodNutrients() throws ImproperRequestException {
         // Act
         List<Nutrient> foodNutrients = foodService.getFoodNutritionValue("09041");
 

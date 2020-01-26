@@ -12,17 +12,11 @@
  *
  */
 
-package com.vitanum.foodservice.controller;
+package com.vitanum.foodservice.exeptions;
 
-import com.vitanum.foodservice.entities.Food;
-import com.vitanum.foodservice.entities.Nutrient;
-import com.vitanum.foodservice.exeptions.ImproperRequestException;
+public class ImproperRequestException extends Exception {
 
-import java.util.List;
-
-public interface FoodService {
-
-    List<Food> getFoodByName(String foodSearchKeyword) throws ImproperRequestException;
-
-    List<Nutrient> getFoodNutritionValue(String ndbNo) throws ImproperRequestException;
+    public ImproperRequestException(String message) {
+        super(message);
+    }
 }

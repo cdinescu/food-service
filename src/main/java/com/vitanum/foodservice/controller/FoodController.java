@@ -16,6 +16,7 @@ package com.vitanum.foodservice.controller;
 
 import com.vitanum.foodservice.entities.Food;
 import com.vitanum.foodservice.entities.Nutrient;
+import com.vitanum.foodservice.exeptions.ImproperRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -39,8 +41,15 @@ public class FoodController {
      */
     @GetMapping("/search")
     public ResponseEntity<List<Food>> getFoodByGeneralSearchInput(@RequestParam String foodSearchKeyword) {
-        List<Food> foodByName = foodService.getFoodByName(foodSearchKeyword);
-        return new ResponseEntity<>(foodByName, getHttpStatusBasedOnResult(foodByName));
+        ResponseEntity<List<Food>> responseEntity = null;
+
+        try {
+            List<Food> foodByName = foodService.getFoodByName(foodSearchKeyword);
+            responseEntity = new ResponseEntity<>(foodByName, getHttpStatusBasedOnResult(foodByName));
+        } catch (ImproperRequestException e) {
+            responseEntity = new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+        }
+        return responseEntity;
     }
 
     /**
@@ -50,8 +59,14 @@ public class FoodController {
      */
     @GetMapping("/reports")
     public ResponseEntity<List<Nutrient>> getNutrition(@RequestParam String ndbNo) {
-        List<Nutrient> foodNutrients = foodService.getFoodNutritionValue(ndbNo);
-        return new ResponseEntity<>(foodNutrients, getHttpStatusBasedOnResult(foodNutrients));
+        ResponseEntity<List<Nutrient>> responseEntity = null;
+        try {
+            List<Nutrient> foodNutrients = foodService.getFoodNutritionValue(ndbNo);
+            responseEntity = new ResponseEntity<>(foodNutrients, getHttpStatusBasedOnResult(foodNutrients));
+        } catch (ImproperRequestException e) {
+            responseEntity = new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+        }
+        return responseEntity;
     }
 
     private HttpStatus getHttpStatusBasedOnResult(List<?> list) {

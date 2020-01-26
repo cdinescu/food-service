@@ -57,6 +57,19 @@ public class FoodServiceControllerTest {
     }
 
     @Test
+    public void testGetFoodByGeneralSearchInputWhenQueryParamEmpty() {
+        client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/foods/search")
+                        .queryParam("foodSearchKeyword", "").build())
+                .accept(APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectHeader().contentType(APPLICATION_JSON)
+                .expectBody();
+    }
+
+    @Test
     public void testGetFoodNutrients() {
         client.get()
                 .uri(uriBuilder -> uriBuilder

@@ -16,6 +16,7 @@ package com.vitanum.foodservice.controller;
 
 import com.vitanum.foodservice.entities.Food;
 import com.vitanum.foodservice.entities.Nutrient;
+import com.vitanum.foodservice.exeptions.ImproperRequestException;
 import com.vitanum.foodservice.http.utils.HttpUtils;
 import com.vitanum.foodservice.response.parser.FoodJsonParser;
 import com.vitanum.foodservice.utils.UriComponentBuilderUtils;
@@ -39,19 +40,35 @@ public class FoodServiceImpl implements FoodService {
     private UriComponentBuilderUtils uriComponentBuilderUtils;
 
     @Override
-    public List<Food> getFoodByName(String foodSearchKeyword) {
+    public List<Food> getFoodByName(String foodSearchKeyword) throws ImproperRequestException {
+        // sanitize request parameter
+        sanitizeRequestParameter(foodSearchKeyword);
+
+        // set-up the HTTP header and URI builder
         HttpHeaders headers = HttpUtils.createHttpHeader();
         UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentsBuilderForFoodSearch(foodSearchKeyword);
 
-        return FoodJsonParser.extractFoodFromJson(getResponse(headers, builder).getBody());
+        // return the food entities extracted from the response
+        return FoodJsonParser.extractFoodFromJson(getResponse(headers, builder));
     }
 
     @Override
-    public List<Nutrient> getFoodNutritionValue(String ndbNo) {
+    public List<Nutrient> getFoodNutritionValue(String ndbNo) throws ImproperRequestException {
+        // sanitize request parameter
+        sanitizeRequestParameter(ndbNo);
+
+        // set-up the HTTP header and URI builder
         HttpHeaders headers = HttpUtils.createHttpHeader();
         UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentBuilderForFoodReport(ndbNo);
 
+        // return the nutrients extracted from the response
         return FoodJsonParser.extractNutrientsFromJson(getResponse(headers, builder));
+    }
+
+    private void sanitizeRequestParameter(String requestParameter) throws ImproperRequestException {
+        if (requestParameter == null || requestParameter.isEmpty()) {
+            throw new ImproperRequestException("Failed to send request: improper parameter");
+        }
     }
 
     private ResponseEntity<String> getResponse(HttpHeaders headers, UriComponentsBuilder builder) {

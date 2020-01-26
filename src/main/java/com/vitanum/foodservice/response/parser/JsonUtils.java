@@ -12,17 +12,24 @@
  *
  */
 
-package com.vitanum.foodservice.controller;
+package com.vitanum.foodservice.response.parser;
 
-import com.vitanum.foodservice.entities.Food;
-import com.vitanum.foodservice.entities.Nutrient;
-import com.vitanum.foodservice.exeptions.ImproperRequestException;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.List;
+import java.io.IOException;
+import java.util.Map;
 
-public interface FoodService {
+public class JsonUtils {
 
-    List<Food> getFoodByName(String foodSearchKeyword) throws ImproperRequestException;
+    private JsonUtils() {
 
-    List<Nutrient> getFoodNutritionValue(String ndbNo) throws ImproperRequestException;
+    }
+
+    public static MappingIterator<Map> getMapMappingIterator(String body) throws IOException {
+        return new ObjectMapper().readValues(
+                new JsonFactory().createParser(body), Map.class);
+    }
+
 }
