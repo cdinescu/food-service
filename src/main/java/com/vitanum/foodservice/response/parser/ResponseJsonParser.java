@@ -29,24 +29,16 @@ public class ResponseJsonParser {
     }
 
     public static List<Food> extractFood(ResponseEntity<String> response) {
-        if (isResponseNok(response)) {
-            return new ArrayList<>();
-        }
-
-        return new FoodListParser().parseData(response.getBody());
+        return isResponseOk(response) ? new FoodListParser().parseData(response.getBody()) : new ArrayList<>();
     }
 
 
     public static List<Nutrient> extractNutrients(ResponseEntity<String> response) {
-        if (isResponseNok(response)) {
-            return new ArrayList<>();
-        }
-
-        return new NutrientListParser().parseData(response.getBody());
+        return isResponseOk(response) ? new NutrientListParser().parseData(response.getBody()) : new ArrayList<>();
     }
 
-    private static boolean isResponseNok(ResponseEntity<String> response) {
-        return response.getStatusCode() != HttpStatus.OK || !response.hasBody();
+    private static boolean isResponseOk(ResponseEntity<String> response) {
+        return response != null && response.getStatusCode() == HttpStatus.OK || response.hasBody();
     }
 
 }
