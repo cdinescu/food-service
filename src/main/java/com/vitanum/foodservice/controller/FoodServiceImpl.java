@@ -18,7 +18,7 @@ import com.vitanum.foodservice.entities.Food;
 import com.vitanum.foodservice.entities.Nutrient;
 import com.vitanum.foodservice.exeptions.ImproperRequestException;
 import com.vitanum.foodservice.http.utils.HttpUtils;
-import com.vitanum.foodservice.response.parser.FoodJsonParser;
+import com.vitanum.foodservice.response.parser.ResponseJsonParser;
 import com.vitanum.foodservice.utils.UriComponentBuilderUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -49,7 +49,7 @@ public class FoodServiceImpl implements FoodService {
         UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentsBuilderForFoodSearch(foodSearchKeyword);
 
         // return the food entities extracted from the response
-        return FoodJsonParser.extractFoodFromJson(getResponse(headers, builder));
+        return ResponseJsonParser.extractFood(getResponse(headers, builder));
     }
 
     @Override
@@ -62,7 +62,7 @@ public class FoodServiceImpl implements FoodService {
         UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentBuilderForFoodReport(ndbNo);
 
         // return the nutrients extracted from the response
-        return FoodJsonParser.extractNutrientsFromJson(getResponse(headers, builder));
+        return ResponseJsonParser.extractNutrients(getResponse(headers, builder));
     }
 
     private void sanitizeRequestParameter(String requestParameter) throws ImproperRequestException {

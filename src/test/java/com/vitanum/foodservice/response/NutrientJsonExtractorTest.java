@@ -15,7 +15,7 @@
 package com.vitanum.foodservice.response;
 
 import com.vitanum.foodservice.entities.Nutrient;
-import com.vitanum.foodservice.response.parser.NutrientJsonExtractor;
+import com.vitanum.foodservice.response.parser.NutrientListParser;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +27,7 @@ import java.util.List;
  */
 @SpringBootTest
 public class NutrientJsonExtractorTest {
+    private NutrientListParser nutrientListParser = new NutrientListParser();
 
     @Test
     public void testGetNutrientsResponseBodyOK() {
@@ -34,7 +35,7 @@ public class NutrientJsonExtractorTest {
         String body = getTwoBananaNutrientsResponseBody();
 
         // Act
-        List<Nutrient> nutrientList = NutrientJsonExtractor.getNutrients(body);
+        List<Nutrient> nutrientList = nutrientListParser.parseData(body);
 
         // Assert
         Assert.assertEquals(32, nutrientList.size());
@@ -43,7 +44,7 @@ public class NutrientJsonExtractorTest {
     @Test
     public void testGetNutrientsResponseBodyEmpty() {
         // Act
-        List<Nutrient> nutrientList = NutrientJsonExtractor.getNutrients("");
+        List<Nutrient> nutrientList = nutrientListParser.parseData("");
 
         // Assert
         Assert.assertEquals(0, nutrientList.size());
@@ -52,7 +53,7 @@ public class NutrientJsonExtractorTest {
     @Test
     public void testGetNutrientsResponseBodyNull() {
         // Act
-        List<Nutrient> nutrientList = NutrientJsonExtractor.getNutrients(null);
+        List<Nutrient> nutrientList = nutrientListParser.parseData(null);
 
         // Assert
         Assert.assertEquals(0, nutrientList.size());
@@ -70,7 +71,7 @@ public class NutrientJsonExtractorTest {
                 "            }";
 
         // Act
-        List<Nutrient> nutrientList = NutrientJsonExtractor.getNutrients(body);
+        List<Nutrient> nutrientList = nutrientListParser.parseData(body);
 
         // Assert
         Assert.assertEquals(0, nutrientList.size());

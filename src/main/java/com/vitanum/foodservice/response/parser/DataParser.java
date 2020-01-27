@@ -18,8 +18,6 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vitanum.foodservice.entities.Food;
-import com.vitanum.foodservice.entities.FoodResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,38 +25,41 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FoodJsonExtractor {
-    private static final Logger LOG = LoggerFactory.getLogger(FoodJsonExtractor.class);
+public abstract class DataParser<T> {
+    protected static final Logger LOG = LoggerFactory.getLogger(FoodListParser.class);
 
-    private FoodJsonExtractor() {
 
-    }
-
-    public static List<Food> getFoods(String body) {
-        List<Food> allFoods = new ArrayList<>();
+    public List<T> parseData(String body) {
+        List<T> allEntities = new ArrayList<>();
 
         if (body == null) {
-            return allFoods;
+            return new ArrayList<>();
         }
 
         try {
-            JsonFactory factory = new JsonFactory();
-            JsonParser parser = factory.createParser(body);
+            JsonParser parser = getJsonParser(body);
+            ObjectMapper objectMapper = getObjectMapper();
 
-            //create ObjectMapper instance
-            ObjectMapper objectMapper = new ObjectMapper();
-            // deserialize by using the root value as well
-            objectMapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
-            FoodResponse foodResponse = objectMapper.readValue(parser, FoodResponse.class);
-
-            allFoods = foodResponse.getItem();
-
+            allEntities = getUsdaEntities(parser, objectMapper);
         } catch (IOException exception) {
             LOG.error("Failed to extract food: ", exception);
         }
 
-        return allFoods;
+        return allEntities;
     }
 
+    private ObjectMapper getObjectMapper() {
+        //create ObjectMapper instance
+        ObjectMapper objectMapper = new ObjectMapper();
+        // deserialize by using the root value as well
+        objectMapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
 
+        return objectMapper;
+    }
+
+    private JsonParser getJsonParser(String body) throws IOException {
+        return new JsonFactory().createParser(body);
+    }
+
+    protected abstract List<T> getUsdaEntities(JsonParser parser, ObjectMapper objectMapper) throws IOException;
 }

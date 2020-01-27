@@ -15,7 +15,7 @@
 package com.vitanum.foodservice.response;
 
 import com.vitanum.foodservice.entities.Food;
-import com.vitanum.foodservice.response.parser.FoodJsonExtractor;
+import com.vitanum.foodservice.response.parser.FoodListParser;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,14 +24,14 @@ import java.util.List;
 
 @SpringBootTest
 public class FoodJsonExtractorTest {
+    private FoodListParser foodListParser = new FoodListParser();
 
     @Test
     public void testGetFoodResponseBodyOK() {
-        // Arrange
         String body = getTwoBananasResponseBody();
 
         // Act
-        List<Food> foodList = FoodJsonExtractor.getFoods(body);
+        List<Food> foodList = foodListParser.parseData(body);
 
         // Assert
         Assert.assertEquals(2, foodList.size());
@@ -40,7 +40,7 @@ public class FoodJsonExtractorTest {
     @Test
     public void testGetFoodResponseBodyEmpty() {
         // Act
-        List<Food> foodList = FoodJsonExtractor.getFoods("");
+        List<Food> foodList = foodListParser.parseData("");
 
         // Assert
         Assert.assertEquals(0, foodList.size());
@@ -49,7 +49,7 @@ public class FoodJsonExtractorTest {
     @Test
     public void testGetFoodResponseBodyNull() {
         // Act
-        List<Food> foodList = FoodJsonExtractor.getFoods(null);
+        List<Food> foodList = foodListParser.parseData(null);
 
         // Assert
         Assert.assertEquals(0, foodList.size());
@@ -66,7 +66,7 @@ public class FoodJsonExtractorTest {
                 "                \"value\": \"0.174\"\n" +
                 "            }";
         // Act
-        List<Food> foodList = FoodJsonExtractor.getFoods(body);
+        List<Food> foodList = foodListParser.parseData(body);
 
         // Assert
         Assert.assertEquals(0, foodList.size());

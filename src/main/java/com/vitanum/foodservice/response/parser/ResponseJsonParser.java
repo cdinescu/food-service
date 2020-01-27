@@ -22,32 +22,31 @@ import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FoodJsonParser {
+public class ResponseJsonParser {
 
-    private FoodJsonParser() {
+    private ResponseJsonParser() {
 
     }
 
-    public static List<Food> extractFoodFromJson(ResponseEntity<String> response) {
+    public static List<Food> extractFood(ResponseEntity<String> response) {
         if (isResponseNok(response)) {
             return new ArrayList<>();
         }
 
-        return FoodJsonExtractor.getFoods(response.getBody());
+        return new FoodListParser().parseData(response.getBody());
     }
 
 
-    public static List<Nutrient> extractNutrientsFromJson(ResponseEntity<String> response) {
+    public static List<Nutrient> extractNutrients(ResponseEntity<String> response) {
         if (isResponseNok(response)) {
             return new ArrayList<>();
         }
 
-        return NutrientJsonExtractor.getNutrients(response.getBody());
+        return new NutrientListParser().parseData(response.getBody());
     }
 
     private static boolean isResponseNok(ResponseEntity<String> response) {
         return response.getStatusCode() != HttpStatus.OK || !response.hasBody();
     }
-
 
 }
