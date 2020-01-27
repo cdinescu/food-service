@@ -29,24 +29,20 @@ public class FoodJsonParser {
     }
 
     public static List<Food> extractFoodFromJson(ResponseEntity<String> response) {
-        List<Food> allFoods = new ArrayList<>();
-
         if (isResponseNok(response)) {
-            return allFoods;
+            return new ArrayList<>();
         }
 
-        return FoodJsonExtractor.getFoods(allFoods, response.getBody());
+        return FoodJsonExtractor.getFoods(response.getBody());
     }
 
 
     public static List<Nutrient> extractNutrientsFromJson(ResponseEntity<String> response) {
-        List<Nutrient> allNutrients = new ArrayList<>();
-
         if (isResponseNok(response)) {
-            return allNutrients;
+            return new ArrayList<>();
         }
 
-        return NutrientJsonExtractor.getNutrients(allNutrients, response.getBody());
+        return NutrientJsonExtractor.getNutrients(response.getBody());
     }
 
     private static boolean isResponseNok(ResponseEntity<String> response) {

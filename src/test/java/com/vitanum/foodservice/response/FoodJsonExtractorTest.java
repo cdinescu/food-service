@@ -20,7 +20,6 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
@@ -29,12 +28,10 @@ public class FoodJsonExtractorTest {
     @Test
     public void testGetFoodResponseBodyOK() {
         // Arrange
-        List<Food> foodList = new ArrayList<>();
-
         String body = getTwoBananasResponseBody();
 
         // Act
-        FoodJsonExtractor.getFoods(foodList, body);
+        List<Food> foodList = FoodJsonExtractor.getFoods(body);
 
         // Assert
         Assert.assertEquals(2, foodList.size());
@@ -42,11 +39,8 @@ public class FoodJsonExtractorTest {
 
     @Test
     public void testGetFoodResponseBodyEmpty() {
-        // Arrange
-        List<Food> foodList = new ArrayList<>();
-
         // Act
-        FoodJsonExtractor.getFoods(foodList, "");
+        List<Food> foodList = FoodJsonExtractor.getFoods("");
 
         // Assert
         Assert.assertEquals(0, foodList.size());
@@ -54,11 +48,8 @@ public class FoodJsonExtractorTest {
 
     @Test
     public void testGetFoodResponseBodyNull() {
-        // Arrange
-        List<Food> foodList = new ArrayList<>();
-
         // Act
-        FoodJsonExtractor.getFoods(foodList, null);
+        List<Food> foodList = FoodJsonExtractor.getFoods(null);
 
         // Assert
         Assert.assertEquals(0, foodList.size());
@@ -67,7 +58,6 @@ public class FoodJsonExtractorTest {
     @Test
     public void testGetFoodResponseBodyWithUnexpectedFormat() {
         // Arrange
-        List<Food> foodList = new ArrayList<>();
         String body = "          {\n" +
                 "                \"label\": \"tbsp\",\n" +
                 "                \"eqv\": 6.2,\n" +
@@ -76,7 +66,7 @@ public class FoodJsonExtractorTest {
                 "                \"value\": \"0.174\"\n" +
                 "            }";
         // Act
-        FoodJsonExtractor.getFoods(foodList, body);
+        List<Food> foodList = FoodJsonExtractor.getFoods(body);
 
         // Assert
         Assert.assertEquals(0, foodList.size());

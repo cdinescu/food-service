@@ -14,17 +14,18 @@
 
 package com.vitanum.foodservice.response.parser;
 
-import com.fasterxml.jackson.databind.MappingIterator;
-import com.vitanum.foodservice.entities.Measurement;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vitanum.foodservice.entities.Nutrient;
-import com.vitanum.foodservice.exeptions.NullResponseBodyException;
+import com.vitanum.foodservice.entities.NutrientResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class NutrientJsonExtractor {
     private static final Logger LOG = LoggerFactory.getLogger(NutrientJsonExtractor.class);
@@ -33,49 +34,33 @@ public class NutrientJsonExtractor {
 
     }
 
-    public static List<Nutrient> getNutrients(List<Nutrient> allNutrients, String body) {
+    public static List<Nutrient> getNutrients(String body) {
         System.out.println(body);
 
-        //JsonNode jsonInput =;
-        //JsonSchemaFactory.byDefault().getValidator().validate();
-        try {
-            MappingIterator<Map> mapMappingIterator = JsonUtils.getMapMappingIterator(body);
+        List<Nutrient> allNutrients = new ArrayList<>();
 
-            extractNutrientsFromResponse(allNutrients, mapMappingIterator);
-        } catch (IOException | NullResponseBodyException exception) {
-            LOG.error("Failed to extract nutrients: ", exception);
+        if (body == null) {
+            return allNutrients;
         }
+
+        try {
+            JsonFactory factory = new JsonFactory();
+            JsonParser parser = factory.createParser(body);
+
+            //create ObjectMapper instance
+            ObjectMapper objectMapper = new ObjectMapper();
+            // deserialize by using the root value as well
+            objectMapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
+
+            NutrientResponse nutrientResponse = objectMapper.readValue(parser, NutrientResponse.class);
+
+            allNutrients = nutrientResponse.getFood().getNutrients();
+
+        } catch (IOException exception) {
+            LOG.error("Failed to extract food: ", exception);
+        }
+
         return allNutrients;
     }
 
-    private static void extractNutrientsFromResponse(List<Nutrient> allNutrients, MappingIterator<Map> mapMappingIterator) {
-        for (Iterator it = mapMappingIterator; it.hasNext(); ) {
-            Map next = (Map) it.next();
-            Map<String, Object> list = (Map<String, Object>) next.get("report");
-            Map<String, Object> food = (Map<String, Object>) list.get("food");
-            List<Map<String, Object>> nutrients = (List<Map<String, Object>>) food.get("nutrients");
-
-            nutrients.forEach(nutrientsMap -> extractNutrient(allNutrients, nutrientsMap));
-
-        }
-    }
-
-    private static void extractNutrient(List<Nutrient> allNutrients, Map<String, Object> nutrientsMap) {
-        String nutrientId = (String) nutrientsMap.get("nutrient_id");
-        String nutrientName = (String) nutrientsMap.get("name");
-        String unit = (String) nutrientsMap.get("unit");
-        Double amount = Double.valueOf((String) nutrientsMap.get("value"));
-
-        List<Measurement> measures = (List<Measurement>) nutrientsMap.get("measures");
-        System.out.println("MEASURES " + measures);
-        Nutrient nutrient = new Nutrient.NutrientBuilder()
-                .setNutrientId(nutrientId)
-                .setNutrientName(nutrientName)
-                .setUnit(unit)
-                .setAmount(amount)
-                .setMeasurements(measures)
-                .build();
-
-        allNutrients.add(nutrient);
-    }
 }

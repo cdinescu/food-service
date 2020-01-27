@@ -20,7 +20,6 @@ import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,12 +31,10 @@ public class NutrientJsonExtractorTest {
     @Test
     public void testGetNutrientsResponseBodyOK() {
         // Arrange
-        List<Nutrient> nutrientList = new ArrayList<>();
-
         String body = getTwoBananaNutrientsResponseBody();
 
         // Act
-        NutrientJsonExtractor.getNutrients(nutrientList, body);
+        List<Nutrient> nutrientList = NutrientJsonExtractor.getNutrients(body);
 
         // Assert
         Assert.assertEquals(32, nutrientList.size());
@@ -45,11 +42,8 @@ public class NutrientJsonExtractorTest {
 
     @Test
     public void testGetNutrientsResponseBodyEmpty() {
-        // Arrange
-        List<Nutrient> nutrientList = new ArrayList<>();
-
         // Act
-        NutrientJsonExtractor.getNutrients(nutrientList, "");
+        List<Nutrient> nutrientList = NutrientJsonExtractor.getNutrients("");
 
         // Assert
         Assert.assertEquals(0, nutrientList.size());
@@ -57,11 +51,8 @@ public class NutrientJsonExtractorTest {
 
     @Test
     public void testGetNutrientsResponseBodyNull() {
-        // Arrange
-        List<Nutrient> nutrientList = new ArrayList<>();
-
         // Act
-        NutrientJsonExtractor.getNutrients(nutrientList, null);
+        List<Nutrient> nutrientList = NutrientJsonExtractor.getNutrients(null);
 
         // Assert
         Assert.assertEquals(0, nutrientList.size());
@@ -70,7 +61,6 @@ public class NutrientJsonExtractorTest {
     @Test
     public void testGetNutrientsResponseBodyWithUnexpectedResult() {
         // Arrange
-        List<Nutrient> nutrientList = new ArrayList<>();
         String body = "          {\n" +
                 "                \"label\": \"tbsp\",\n" +
                 "                \"eqv\": 6.2,\n" +
@@ -80,7 +70,7 @@ public class NutrientJsonExtractorTest {
                 "            }";
 
         // Act
-        NutrientJsonExtractor.getNutrients(nutrientList, body);
+        List<Nutrient> nutrientList = NutrientJsonExtractor.getNutrients(body);
 
         // Assert
         Assert.assertEquals(0, nutrientList.size());

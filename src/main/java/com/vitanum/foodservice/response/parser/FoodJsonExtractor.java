@@ -14,16 +14,18 @@
 
 package com.vitanum.foodservice.response.parser;
 
-import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vitanum.foodservice.entities.Food;
-import com.vitanum.foodservice.exeptions.NullResponseBodyException;
+import com.vitanum.foodservice.entities.FoodResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class FoodJsonExtractor {
     private static final Logger LOG = LoggerFactory.getLogger(FoodJsonExtractor.class);
@@ -32,41 +34,31 @@ public class FoodJsonExtractor {
 
     }
 
-    public static List<Food> getFoods(List<Food> allFoods, String body) {
-        try {
-            MappingIterator<Map> mapMappingIterator = JsonUtils.getMapMappingIterator(body);
+    public static List<Food> getFoods(String body) {
+        List<Food> allFoods = new ArrayList<>();
 
-            extractFoodListFromResponse(allFoods, mapMappingIterator);
-        } catch (IOException | NullResponseBodyException exception) {
+        if (body == null) {
+            return allFoods;
+        }
+
+        try {
+            JsonFactory factory = new JsonFactory();
+            JsonParser parser = factory.createParser(body);
+
+            //create ObjectMapper instance
+            ObjectMapper objectMapper = new ObjectMapper();
+            // deserialize by using the root value as well
+            objectMapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
+            FoodResponse foodResponse = objectMapper.readValue(parser, FoodResponse.class);
+
+            allFoods = foodResponse.getItem();
+
+        } catch (IOException exception) {
             LOG.error("Failed to extract food: ", exception);
         }
 
         return allFoods;
     }
 
-    private static void extractFoodListFromResponse(List<Food> allFoods, MappingIterator<Map> mapMappingIterator) {
-        for (Iterator it = mapMappingIterator; it.hasNext(); ) {
-            Map next = (Map) it.next();
-            Map<String, Object> list = (Map<String, Object>) next.get("list");
-            fetchFoodFromItems(allFoods, list);
-        }
-    }
-
-    private static void fetchFoodFromItems(List<Food> result, Map<String, Object> list) {
-        if (list == null || list.isEmpty()) {
-            return;
-        }
-
-        List<Map<String, String>> item = (List<Map<String, String>>) list.get("item");
-        extractFoodItem(result, item);
-    }
-
-    private static void extractFoodItem(List<Food> result, List<Map<String, String>> item) {
-        for (Map<String, String> map : item) {
-            String foodName = map.get("name");
-            String ndbno = map.get("ndbno");
-            result.add(new Food(foodName, ndbno));
-        }
-    }
 
 }

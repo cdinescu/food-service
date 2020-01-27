@@ -14,89 +14,66 @@
 
 package com.vitanum.foodservice.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Nutrient {
-    private String nutrientId;
-    private String nutrientName;
-    private Double amount;
+    @JsonProperty
+    private String nutrient_id;
+    @JsonProperty
+    private String name;
+    @JsonProperty
+    private String derivation;
+    @JsonProperty
+    private String group;
+    @JsonProperty
     private String unit;
-    private List<Measurement> measurements;
+    @JsonProperty
+    private String value;
+    @JsonProperty
+    private List<Measurement> measures;
 
-    public Nutrient(NutrientBuilder theNutrientBuilder) {
-        this.nutrientId = theNutrientBuilder.nutrientId;
-        this.nutrientName = theNutrientBuilder.nutrientName;
-        this.amount = theNutrientBuilder.amount;
-        this.unit = theNutrientBuilder.unit;
-        this.measurements = theNutrientBuilder.measurements;
+    public String getNutrient_id() {
+        return nutrient_id;
     }
 
-    public String getNutrientId() {
-        return nutrientId;
+    public String getName() {
+        return name;
     }
 
-    public String getNutrientName() {
-        return nutrientName;
+    public String getDerivation() {
+        return derivation;
     }
 
-    public Double getAmount() {
-        return amount;
+    public String getGroup() {
+        return group;
     }
 
     public String getUnit() {
         return unit;
     }
 
+    public String getValue() {
+        return value;
+    }
+
     public List<Measurement> getMeasures() {
-        return measurements;
+        return measures;
     }
 
     @Override
     public String toString() {
         return "Nutrient{" +
-                "nutrientId='" + nutrientId + '\'' +
-                ", nutrientName='" + nutrientName + '\'' +
-                ", amount=" + amount +
+                "nutrient_id='" + nutrient_id + '\'' +
+                ", name='" + name + '\'' +
+                ", derivation='" + derivation + '\'' +
+                ", group='" + group + '\'' +
                 ", unit='" + unit + '\'' +
-                ", measurements=" + measurements +
+                ", value='" + value + '\'' +
+                ", measures=" + measures +
                 '}';
     }
-
-    public static class NutrientBuilder {
-        String nutrientId;
-        String nutrientName;
-        Double amount;
-        String unit;
-        List<Measurement> measurements;
-
-        public NutrientBuilder setNutrientId(String nutrientId) {
-            this.nutrientId = nutrientId;
-            return this;
-        }
-
-        public NutrientBuilder setAmount(Double amount) {
-            this.amount = amount;
-            return this;
-        }
-
-        public NutrientBuilder setUnit(String unit) {
-            this.unit = unit;
-            return this;
-        }
-
-        public NutrientBuilder setNutrientName(String nutrientName) {
-            this.nutrientName = nutrientName;
-            return this;
-        }
-
-        public NutrientBuilder setMeasurements(List<Measurement> measurements) {
-            this.measurements = measurements;
-            return this;
-        }
-
-        public Nutrient build() {
-            return new Nutrient(this);
-        }
-    }
-
 }

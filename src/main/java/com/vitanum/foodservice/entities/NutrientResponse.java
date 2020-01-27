@@ -16,43 +16,36 @@ package com.vitanum.foodservice.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
+@JsonRootName(value = "report")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Measurement {
+public class NutrientResponse {
     @JsonProperty
-    private String label;
+    private String sr;
     @JsonProperty
-    private Double eqv;
+    private String type;
     @JsonProperty
-    private String eunit;
-    @JsonProperty
-    private Double qty;
-    @JsonProperty
-    private Double value;
+    private Food food;
 
-    public String getLabel() {
-        return label;
+    public String getSr() {
+        return sr;
     }
 
-    public Double getEqv() {
-        return eqv;
+    public String getType() {
+        return type;
     }
 
-    public Double getQty() {
-        return qty;
-    }
-
-    public Double getValue() {
-        return value;
+    public Food getFood() {
+        return food;
     }
 
     @Override
     public String toString() {
-        return "Measurement{" +
-                "label='" + label + '\'' +
-                ", eqv=" + eqv +
-                ", qty=" + qty +
-                ", value=" + value +
+        return "NutrientResponse{" +
+                "sr='" + sr + '\'' +
+                ", type='" + type + '\'' +
+                ", food=" + food +
                 '}';
     }
 }

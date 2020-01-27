@@ -14,22 +14,75 @@
 
 package com.vitanum.foodservice.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.List;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Food {
+    @JsonProperty
+    private Integer offset;
+    @JsonProperty
+    private String group;
+    @JsonProperty
     private String name;
+    @JsonProperty
+    private String ndbno;
+    @JsonProperty
+    private String ds;
+    @JsonProperty
+    private String manu;
 
-    private String ndbNo;
+    @JsonProperty
+    private String ru;
 
-    public Food(String name, String ndbNo) {
-        this.name = name;
-        this.ndbNo = ndbNo;
+    @JsonProperty
+    private List<Nutrient> nutrients;
+
+    public Integer getOffset() {
+        return offset;
+    }
+
+    public String getGroup() {
+        return group;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getNdbNo() {
-        return ndbNo;
+    public String getNdbno() {
+        return ndbno;
     }
 
+    public String getDs() {
+        return ds;
+    }
+
+    public String getManu() {
+        return manu;
+    }
+
+    public String getRu() {
+        return ru;
+    }
+
+    public List<Nutrient> getNutrients() {
+        return nutrients;
+    }
+
+    @Override
+    public String toString() {
+        return "Food{" +
+                "offset=" + offset +
+                ", group='" + group + '\'' +
+                ", name='" + name + '\'' +
+                ", ndbno='" + ndbno + '\'' +
+                ", ds='" + ds + '\'' +
+                ", manu='" + manu + '\'' +
+                ", ru='" + ru + '\'' +
+                ", nutrients=" + nutrients +
+                '}';
+    }
 }
