@@ -24,7 +24,7 @@ import java.util.List;
 
 @SpringBootTest
 public class FoodJsonExtractorTest {
-    private FoodListParser foodListParser = new FoodListParser();
+    private final FoodListParser foodListParser = new FoodListParser();
 
     @Test
     public void testGetFoodResponseBodyOK() {

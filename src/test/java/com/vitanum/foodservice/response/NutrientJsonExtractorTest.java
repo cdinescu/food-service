@@ -27,7 +27,7 @@ import java.util.List;
  */
 @SpringBootTest
 public class NutrientJsonExtractorTest {
-    private NutrientListParser nutrientListParser = new NutrientListParser();
+    private final NutrientListParser nutrientListParser = new NutrientListParser();
 
     @Test
     public void testGetNutrientsResponseBodyOK() {

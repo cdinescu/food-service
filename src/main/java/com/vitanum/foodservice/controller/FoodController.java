@@ -41,7 +41,7 @@ public class FoodController {
      */
     @GetMapping("/search")
     public ResponseEntity<List<Food>> getFoodByGeneralSearchInput(@RequestParam String foodSearchKeyword) {
-        ResponseEntity<List<Food>> responseEntity = null;
+        ResponseEntity<List<Food>> responseEntity;
 
         try {
             List<Food> foodByName = foodService.getFoodByName(foodSearchKeyword);
@@ -59,7 +59,7 @@ public class FoodController {
      */
     @GetMapping("/reports")
     public ResponseEntity<List<Nutrient>> getNutrition(@RequestParam String ndbNo) {
-        ResponseEntity<List<Nutrient>> responseEntity = null;
+        ResponseEntity<List<Nutrient>> responseEntity;
         try {
             List<Nutrient> foodNutrients = foodService.getFoodNutritionValue(ndbNo);
             responseEntity = new ResponseEntity<>(foodNutrients, getHttpStatusBasedOnResult(foodNutrients));
