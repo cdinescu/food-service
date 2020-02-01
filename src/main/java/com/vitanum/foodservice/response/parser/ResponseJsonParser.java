@@ -32,7 +32,6 @@ public class ResponseJsonParser {
         return isResponseOk(response) ? new FoodListParser().parseData(response.getBody()) : new ArrayList<>();
     }
 
-
     public static List<Nutrient> extractNutrients(ResponseEntity<String> response) {
         return isResponseOk(response) ? new NutrientListParser().parseData(response.getBody()) : new ArrayList<>();
     }
