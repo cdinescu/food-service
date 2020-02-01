@@ -16,9 +16,17 @@ package com.vitanum.foodservice.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Nutrient {
     @JsonProperty
@@ -35,45 +43,4 @@ public class Nutrient {
     private String value;
     @JsonProperty
     private List<Measurement> measures;
-
-    public String getNutrient_id() {
-        return nutrient_id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDerivation() {
-        return derivation;
-    }
-
-    public String getGroup() {
-        return group;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public List<Measurement> getMeasures() {
-        return measures;
-    }
-
-    @Override
-    public String toString() {
-        return "Nutrient{" +
-                "nutrient_id='" + nutrient_id + '\'' +
-                ", name='" + name + '\'' +
-                ", derivation='" + derivation + '\'' +
-                ", group='" + group + '\'' +
-                ", unit='" + unit + '\'' +
-                ", value='" + value + '\'' +
-                ", measures=" + measures +
-                '}';
-    }
 }

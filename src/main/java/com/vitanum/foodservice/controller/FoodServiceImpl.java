@@ -16,7 +16,7 @@ package com.vitanum.foodservice.controller;
 
 import com.vitanum.foodservice.entities.Food;
 import com.vitanum.foodservice.entities.Nutrient;
-import com.vitanum.foodservice.exeptions.ImproperRequestException;
+import com.vitanum.foodservice.exceptions.ImproperRequestException;
 import com.vitanum.foodservice.http.utils.HttpUtils;
 import com.vitanum.foodservice.response.parser.ResponseJsonParser;
 import com.vitanum.foodservice.utils.UriComponentBuilderUtils;

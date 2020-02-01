@@ -12,11 +12,11 @@
  *
  */
 
-package com.vitanum.foodservice.exeptions;
+package com.vitanum.foodservice.exceptions;
 
-public class NullResponseBodyException extends Exception {
+public class ImproperRequestException extends Exception {
 
-    public NullResponseBodyException(String message) {
+    public ImproperRequestException(String message) {
         super(message);
     }
 }

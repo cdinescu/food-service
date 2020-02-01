@@ -16,7 +16,15 @@ package com.vitanum.foodservice.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Measurement {
     @JsonProperty
@@ -29,30 +37,4 @@ public class Measurement {
     private Double qty;
     @JsonProperty
     private Double value;
-
-    public String getLabel() {
-        return label;
-    }
-
-    public Double getEqv() {
-        return eqv;
-    }
-
-    public Double getQty() {
-        return qty;
-    }
-
-    public Double getValue() {
-        return value;
-    }
-
-    @Override
-    public String toString() {
-        return "Measurement{" +
-                "label='" + label + '\'' +
-                ", eqv=" + eqv +
-                ", qty=" + qty +
-                ", value=" + value +
-                '}';
-    }
 }

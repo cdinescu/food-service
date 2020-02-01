@@ -17,7 +17,15 @@ package com.vitanum.foodservice.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 @JsonRootName(value = "report")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NutrientResponse {
@@ -28,24 +36,4 @@ public class NutrientResponse {
     @JsonProperty
     private Food food;
 
-    public String getSr() {
-        return sr;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public Food getFood() {
-        return food;
-    }
-
-    @Override
-    public String toString() {
-        return "NutrientResponse{" +
-                "sr='" + sr + '\'' +
-                ", type='" + type + '\'' +
-                ", food=" + food +
-                '}';
-    }
 }
