@@ -11,11 +11,6 @@
 # 	limitations under the License.
 #
 #
-
-spring:
-  application:
-    name: food-service
-
 usda:
   search:
     url: https://api.nal.usda.gov/ndb
@@ -31,10 +26,9 @@ max:
 response:
   format: json
 
-server:
-  port: 0
-
-eurka:
+eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+
+
