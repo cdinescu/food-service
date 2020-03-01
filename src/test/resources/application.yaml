@@ -1,0 +1,15 @@
+# food-service
+usda:
+  search:
+    url: https://api.nal.usda.gov/ndb
+
+api:
+  key: r2zVHijDn5Q31pBPsS14i8kxKE3ayyOBKaxaJtWc
+
+max:
+  results:
+    per:
+      query: 5
+
+response:
+  format: json
