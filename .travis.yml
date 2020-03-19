@@ -2,6 +2,7 @@ language: java
 
 script:
   - ./gradlew build --scan -s
+  - bash <(curl -s https://codecov.io/bash)
 
 
 before_cache:
