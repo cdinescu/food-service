@@ -40,12 +40,13 @@ public class FoodController {
      * @param foodSearchKeyword the search keyword
      */
     @GetMapping("/search")
-    public ResponseEntity<List<Food>> getFoodByGeneralSearchInput(@RequestParam String foodSearchKeyword) {
+    public ResponseEntity<List<Food>> getFoodByGeneralSearchInput(@RequestParam String foodSearchKeyword,
+                                                                  @RequestParam(required = false, defaultValue = "0") Integer pageNumber) {
         log.info("Search food by using keyword(s): {}", foodSearchKeyword);
         ResponseEntity<List<Food>> responseEntity;
 
         try {
-            List<Food> foodByName = foodService.getFoodByName(foodSearchKeyword);
+            List<Food> foodByName = foodService.getFoodByName(foodSearchKeyword, pageNumber);
             responseEntity = new ResponseEntity<>(foodByName, getHttpStatusBasedOnResult(foodByName));
         } catch (ImproperRequestException e) {
             responseEntity = new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);

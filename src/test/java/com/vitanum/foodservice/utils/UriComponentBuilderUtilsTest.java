@@ -17,31 +17,30 @@ public class UriComponentBuilderUtilsTest {
     private UriComponentBuilderUtils builderUtil = new UriComponentBuilderUtils();
 
     @Test
-    public void getUriComponentsBuilderForFoodSearch_NullToken() throws ImproperRequestException {
-        assertThrows(ImproperRequestException.class, () -> {
-            builderUtil.getUriComponentsBuilderForFoodSearch(null);
-        });
+    public void getUriComponentsBuilderForFoodSearch_NullToken() {
+        assertThrows(ImproperRequestException.class, () ->
+                builderUtil.getUriComponentsBuilderForFoodSearch(null, 0));
     }
 
     @Test
-    public void getUriComponentsBuilderForFoodSearch_EmptyToken() throws ImproperRequestException {
-        assertThrows(ImproperRequestException.class, () -> {
-            builderUtil.getUriComponentsBuilderForFoodSearch("");
-        });
+    public void getUriComponentsBuilderForFoodSearch_EmptyToken() {
+        assertThrows(ImproperRequestException.class, () ->
+                builderUtil.getUriComponentsBuilderForFoodSearch("", 0)
+        );
     }
 
     @Test
-    public void getUriComponentBuilderForFoodReport_NullToken() throws ImproperRequestException {
-        assertThrows(ImproperRequestException.class, () -> {
-            builderUtil.getUriComponentBuilderForFoodReport(null);
-        });
+    public void getUriComponentBuilderForFoodReport_NullToken() {
+        assertThrows(ImproperRequestException.class, () ->
+                builderUtil.getUriComponentBuilderForFoodReport(null)
+        );
     }
 
     @Test
-    public void getUriComponentBuilderForFoodReport_EmptyToken() throws ImproperRequestException {
-        assertThrows(ImproperRequestException.class, () -> {
-            builderUtil.getUriComponentBuilderForFoodReport("");
-        });
+    public void getUriComponentBuilderForFoodReport_EmptyToken() {
+        assertThrows(ImproperRequestException.class, () ->
+                builderUtil.getUriComponentBuilderForFoodReport("")
+        );
     }
 
 }

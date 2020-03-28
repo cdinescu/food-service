@@ -40,10 +40,10 @@ public class FoodServiceImpl implements FoodService {
     private UriComponentBuilderUtils uriComponentBuilderUtils;
 
     @Override
-    public List<Food> getFoodByName(String foodSearchKeyword) throws ImproperRequestException {
+    public List<Food> getFoodByName(String foodSearchKeyword, Integer pageNumber) throws ImproperRequestException {
         // set-up the HTTP header and URI builder
         HttpHeaders headers = HttpUtils.createHttpHeader();
-        UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentsBuilderForFoodSearch(foodSearchKeyword);
+        UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentsBuilderForFoodSearch(foodSearchKeyword, pageNumber);
 
         // return the food entities extracted from the response
         return ResponseJsonParser.extractFood(getResponse(headers, builder));

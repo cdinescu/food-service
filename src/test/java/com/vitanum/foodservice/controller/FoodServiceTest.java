@@ -37,7 +37,7 @@ public class FoodServiceTest {
     @Test
     public void testGetFoods() throws ImproperRequestException {
         // Arrange and Act
-        List<Food> retrievedFoods = foodService.getFoodByName("banana");
+        List<Food> retrievedFoods = foodService.getFoodByName("banana", 0);
 
         // Assert
         assertNotNull(retrievedFoods);
@@ -48,7 +48,7 @@ public class FoodServiceTest {
     @Test
     public void testGetFoodsWithDummyName() throws ImproperRequestException {
         // Arrange and Act
-        List<Food> retrievedFoods = foodService.getFoodByName("dummy food");
+        List<Food> retrievedFoods = foodService.getFoodByName("dummy food", 0);
 
         // Assert
         assertNotNull(retrievedFoods);

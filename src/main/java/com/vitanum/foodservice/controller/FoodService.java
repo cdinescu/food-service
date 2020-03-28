@@ -22,7 +22,7 @@ import java.util.List;
 
 public interface FoodService {
 
-    List<Food> getFoodByName(String foodSearchKeyword) throws ImproperRequestException;
+    List<Food> getFoodByName(String foodSearchKeyword, Integer pageNumber) throws ImproperRequestException;
 
     List<Nutrient> getFoodNutritionValue(String ndbNo) throws ImproperRequestException;
 }

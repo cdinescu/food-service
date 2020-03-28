@@ -40,20 +40,20 @@ public class UriComponentBuilderUtils {
     @Value("${usda.requireAllWords}")
     private String requireAllWords;
 
-    public UriComponentsBuilder getUriComponentsBuilderForFoodSearch(String foodSearchKeyword) throws ImproperRequestException {
+    public UriComponentsBuilder getUriComponentsBuilderForFoodSearch(String foodSearchKeyword, Integer pageNumber) throws ImproperRequestException {
         sanitizeRequestParameter(foodSearchKeyword);
 
         try {
-            String encodedSearchQuery = URLEncoder.encode(foodSearchKeyword, StandardCharsets.UTF_8.toString());
-            foodSearchKeyword = encodedSearchQuery;
+            foodSearchKeyword = URLEncoder.encode(foodSearchKeyword, StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
-            log.error("Failed to encode {}. The search will use the unchanged token");
+            log.error("Failed to encode {}. The search will use the unchanged token", foodSearchKeyword);
         }
 
         return UriComponentsBuilder.fromHttpUrl(foodSearchServiceURL)
                 .queryParam("format", responseFormat)
                 .queryParam("generalSearchInput", foodSearchKeyword)
                 .queryParam("requireAllWords", requireAllWords)
+                .queryParam("pageNumber", pageNumber)
                 .queryParam("api_key", foodServiceApiKey);
     }
 
