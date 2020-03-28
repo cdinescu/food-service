@@ -51,7 +51,7 @@ public class FoodServiceControllerTest {
         client.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(FOOD_SEARCH_URL)
-                        .queryParam("foodSearchKeyword", "green pepper").build())
+                        .queryParam("foodSearchKeyword", "Candies, dark chocolate coated coffee beans").build())
                 .accept(APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()

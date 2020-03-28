@@ -43,12 +43,14 @@ public class UriComponentBuilderUtils {
     public UriComponentsBuilder getUriComponentsBuilderForFoodSearch(String foodSearchKeyword, Integer pageNumber) throws ImproperRequestException {
         sanitizeRequestParameter(foodSearchKeyword);
 
+        foodSearchKeyword = foodSearchKeyword.replaceAll(",", "");
         try {
             foodSearchKeyword = URLEncoder.encode(foodSearchKeyword, StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
             log.error("Failed to encode {}. The search will use the unchanged token", foodSearchKeyword);
         }
 
+        System.out.println("Search: " + foodSearchKeyword);
         return UriComponentsBuilder.fromHttpUrl(foodSearchServiceURL)
                 .queryParam("format", responseFormat)
                 .queryParam("generalSearchInput", foodSearchKeyword)
