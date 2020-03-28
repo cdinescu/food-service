@@ -15,20 +15,36 @@
 package com.vitanum.foodservice.response.parser;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vitanum.foodservice.entities.Nutrient;
 import com.vitanum.foodservice.entities.NutrientResponse;
+import com.vitanum.foodservice.entities.NutrientResponseFood;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class NutrientListParser extends DataParser<Nutrient> {
 
-
     @Override
     protected List<Nutrient> getUsdaEntities(JsonParser parser, ObjectMapper objectMapper) throws IOException {
         NutrientResponse nutrientResponse = objectMapper.readValue(parser, NutrientResponse.class);
+        NutrientResponseFood food = nutrientResponse.getFood();
+        List<Nutrient> result = new ArrayList<>();
 
-        return nutrientResponse.getFood().getNutrients();
+        if (food != null && food.getNutrients() != null) {
+            result = food.getNutrients();
+        }
+
+        return result;
+    }
+
+    @Override
+    protected ObjectMapper getObjectMapper() {
+        ObjectMapper objectMapper = super.getObjectMapper();
+        objectMapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
+
+        return objectMapper;
     }
 }

@@ -20,6 +20,7 @@ import com.vitanum.foodservice.entities.Food;
 import com.vitanum.foodservice.entities.FoodResponse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FoodListParser extends DataParser<Food> {
@@ -29,6 +30,18 @@ public class FoodListParser extends DataParser<Food> {
     protected List<Food> getUsdaEntities(JsonParser parser, ObjectMapper objectMapper) throws IOException {
         FoodResponse foodResponse = objectMapper.readValue(parser, FoodResponse.class);
 
-        return foodResponse.getItem();
+        return removeFoodsWithNullUniqueNumber(foodResponse);
+    }
+
+    private List<Food> removeFoodsWithNullUniqueNumber(FoodResponse foodResponse) {
+        List<Food> result = new ArrayList<>();
+
+        List<Food> foods = foodResponse.getFoods();
+        if (foods != null) {
+            foods.removeIf(food -> food.getNdbNumber() == null);
+            result = foods;
+        }
+
+        return result;
     }
 }

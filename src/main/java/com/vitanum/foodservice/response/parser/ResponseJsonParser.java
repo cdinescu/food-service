@@ -39,5 +39,4 @@ public class ResponseJsonParser {
     private static boolean isResponseOk(ResponseEntity<String> response) {
         return response != null && response.getStatusCode() == HttpStatus.OK && response.hasBody();
     }
-
 }

@@ -16,25 +16,29 @@ package com.vitanum.foodservice.response;
 
 import com.vitanum.foodservice.entities.Food;
 import com.vitanum.foodservice.response.parser.FoodListParser;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.logging.Logger;
 
-@SpringBootTest
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FoodJsonExtractorTest {
+    private static final Logger LOG = Logger.getLogger(FoodJsonExtractorTest.class.getName());
     private final FoodListParser foodListParser = new FoodListParser();
 
     @Test
-    public void testGetFoodResponseBodyOK() {
-        String body = getTwoBananasResponseBody();
+    public void testGetFoodResponseBodyOK_FoodWithoutNdbno() {
+        String body = createFoosResponseBodyWithoutNdbno();
 
         // Act
         List<Food> foodList = foodListParser.parseData(body);
 
         // Assert
-        Assert.assertEquals(2, foodList.size());
+        assertEquals(0, foodList.size());
     }
 
     @Test
@@ -43,7 +47,7 @@ public class FoodJsonExtractorTest {
         List<Food> foodList = foodListParser.parseData("");
 
         // Assert
-        Assert.assertEquals(0, foodList.size());
+        assertEquals(0, foodList.size());
     }
 
     @Test
@@ -52,7 +56,7 @@ public class FoodJsonExtractorTest {
         List<Food> foodList = foodListParser.parseData(null);
 
         // Assert
-        Assert.assertEquals(0, foodList.size());
+        assertEquals(0, foodList.size());
     }
 
     @Test
@@ -69,39 +73,54 @@ public class FoodJsonExtractorTest {
         List<Food> foodList = foodListParser.parseData(body);
 
         // Assert
-        Assert.assertEquals(0, foodList.size());
+        assertEquals(0, foodList.size());
     }
 
-    private String getTwoBananasResponseBody() {
+    private String createFoosResponseBodyWithoutNdbno() {
         return "{\n" +
-                "    \"list\": {\n" +
-                "        \"q\": \"banana\",\n" +
-                "        \"sr\": \"1\",\n" +
-                "        \"ds\": \"any\",\n" +
-                "        \"start\": 0,\n" +
-                "        \"end\": 2,\n" +
-                "        \"total\": 928,\n" +
-                "        \"group\": \"\",\n" +
-                "        \"sort\": \"r\",\n" +
-                "        \"item\": [\n" +
-                "            {\n" +
-                "                \"offset\": 0,\n" +
-                "                \"group\": \"Fruits and Fruit Juices\",\n" +
-                "                \"name\": \"Bananas, dehydrated, or banana powder\",\n" +
-                "                \"ndbno\": \"09041\",\n" +
-                "                \"ds\": \"SR\",\n" +
-                "                \"manu\": \"none\"\n" +
-                "            },\n" +
-                "            {\n" +
-                "                \"offset\": 1,\n" +
-                "                \"group\": \"Branded Food Products Database\",\n" +
-                "                \"name\": \"DEL MONTE, PURE EARTH, 100% PINEAPPLE BANANA COCONUT JUICE, PINEAPPLE, BANANA, COCONUT, UPC: 717524921000\",\n" +
-                "                \"ndbno\": \"45235233\",\n" +
-                "                \"ds\": \"LI\",\n" +
-                "                \"manu\": \"Del Monte Fresh Produce N.A., Inc.\"\n" +
-                "            }\n" +
-                "        ]\n" +
-                "    }\n" +
-                "}\n";
+                "\"foodSearchCriteria\": {\n" +
+                "\"generalSearchInput\": \"Banana\",\n" +
+                "\"pageNumber\": 1,\n" +
+                "\"requireAllWords\": false\n" +
+                "},\n" +
+                "\"totalHits\": 3181,\n" +
+                "\"currentPage\": 1,\n" +
+                "\"totalPages\": 64,\n" +
+                "\"foods\": [\n" +
+                "{\n" +
+                "\"fdcId\": 362759,\n" +
+                "\"description\": \"BANANA\",\n" +
+                "\"dataType\": \"Branded\",\n" +
+                "\"gtinUpc\": \"609207617761\",\n" +
+                "\"publishedDate\": \"2019-04-01\",\n" +
+                "\"brandOwner\": \"Kid Vids Educational Entertainment\",\n" +
+                "\"ingredients\": \"BANANA, SULFUR DIOXIDE (AS A PRESERVATIVE). \",\n" +
+                "\"allHighlightFields\": \"<b>Ingredients</b>: <em>BANANA</em>, SULFUR DIOXIDE (AS A PRESERVATIVE). \",\n" +
+                "\"score\": 813.1304\n" +
+                "},\n" +
+                "{\n" +
+                "\"fdcId\": 363938,\n" +
+                "\"description\": \"BANANA\",\n" +
+                "\"dataType\": \"Branded\",\n" +
+                "\"gtinUpc\": \"016459200441\",\n" +
+                "\"publishedDate\": \"2019-04-01\",\n" +
+                "\"brandOwner\": \"Wonder Natural Foods Corp\",\n" +
+                "\"ingredients\": \"PEANUTS (AS DEFATTED PEANUT FLOUR, PEANUT BUTTER AND NATURAL PEANUT OILS), PURE WATER, TAPIOCA SYRUP, RICE SYRUP, VEGETABLE GLYCERINE, CANE SUGAR, BANANA, NATURAL COLORS AND FLAVORS, SALT, CALCIUM CARBONATE, LECITHIN, TOCOPHEROL (VITAMIN E), SODIUM ASCORBATE (VITAMIN C).\",\n" +
+                "\"allHighlightFields\": \"<b>Ingredients</b>:  SYRUP, RICE SYRUP, VEGETABLE GLYCERINE, CANE SUGAR, <em>BANANA</em>, NATURAL COLORS AND FLAVORS, SALT, CALCIUM\",\n" +
+                "\"score\": 813.1304\n" +
+                "}\n" +
+                "]\n" +
+                "}";
     }
+
+    private void checkFields(List<Food> foodList) {
+        foodList.stream().forEach(this::check);
+    }
+
+    private void check(Food food) {
+        LOG.info("Testing food: " + food);
+        assertNotNull(food.getDescription());
+        assertNotNull(food.getNdbNumber());
+    }
+
 }

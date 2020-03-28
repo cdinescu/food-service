@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Test class for NutrientJsonExtractor.
  */
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class NutrientJsonExtractorTest {
     private final NutrientListParser nutrientListParser = new NutrientListParser();
 

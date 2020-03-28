@@ -16,38 +16,17 @@ package com.vitanum.foodservice.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.List;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
-@JsonRootName(value = "list")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FoodResponse {
     @JsonProperty
-    private String q;
-    @JsonProperty
-    private String sr;
-    @JsonProperty
-    private String ds;
-    @JsonProperty
-    private Integer start;
-    @JsonProperty
-    private Integer end;
-    @JsonProperty
-    private Integer total;
-    @JsonProperty
-    private String group;
-    @JsonProperty
-    private String sort;
-    @JsonProperty
-    private List<Food> item;
-
+    private List<Food> foods;
 }

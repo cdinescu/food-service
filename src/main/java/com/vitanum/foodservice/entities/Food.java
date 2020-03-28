@@ -21,30 +21,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.List;
-
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Food {
     @JsonProperty
-    private Integer offset;
-    @JsonProperty
-    private String group;
-    @JsonProperty
-    private String name;
-    @JsonProperty
-    private String ndbno;
-    @JsonProperty
-    private String ds;
-    @JsonProperty
-    private String manu;
+    String description;
 
     @JsonProperty
-    private String ru;
-
-    @JsonProperty
-    private List<Nutrient> nutrients;
+    String ndbNumber;
 }

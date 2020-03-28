@@ -41,9 +41,6 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public List<Food> getFoodByName(String foodSearchKeyword) throws ImproperRequestException {
-        // sanitize request parameter
-        sanitizeRequestParameter(foodSearchKeyword);
-
         // set-up the HTTP header and URI builder
         HttpHeaders headers = HttpUtils.createHttpHeader();
         UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentsBuilderForFoodSearch(foodSearchKeyword);
@@ -54,21 +51,12 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public List<Nutrient> getFoodNutritionValue(String ndbNo) throws ImproperRequestException {
-        // sanitize request parameter
-        sanitizeRequestParameter(ndbNo);
-
         // set-up the HTTP header and URI builder
         HttpHeaders headers = HttpUtils.createHttpHeader();
         UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentBuilderForFoodReport(ndbNo);
 
         // return the nutrients extracted from the response
         return ResponseJsonParser.extractNutrients(getResponse(headers, builder));
-    }
-
-    private void sanitizeRequestParameter(String requestParameter) throws ImproperRequestException {
-        if (requestParameter == null || requestParameter.isEmpty()) {
-            throw new ImproperRequestException("Failed to send request: improper parameter");
-        }
     }
 
     private ResponseEntity<String> getResponse(HttpHeaders headers, UriComponentsBuilder builder) {
@@ -82,7 +70,8 @@ public class FoodServiceImpl implements FoodService {
                     String.class);
 
         } catch (HttpStatusCodeException theException) {
-            return ResponseEntity.status(theException.getRawStatusCode()).headers(theException.getResponseHeaders())
+            return ResponseEntity.status(theException.getRawStatusCode())
+                    .headers(theException.getResponseHeaders())
                     .body(theException.getResponseBodyAsString());
         }
     }

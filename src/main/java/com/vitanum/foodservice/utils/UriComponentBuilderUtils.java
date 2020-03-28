@@ -14,35 +14,61 @@
 
 package com.vitanum.foodservice.utils;
 
+import com.vitanum.foodservice.exceptions.ImproperRequestException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
+@Slf4j
 public class UriComponentBuilderUtils {
     @Value("${usda.search.url}")
     private String foodSearchServiceURL;
 
+    @Value("${usda.reports.url}")
+    private String foodReportsServiceURL;
+
     @Value("${api.key}")
     private String foodServiceApiKey;
-
-    @Value("${max.results.per.query}")
-    private Integer maxResultsPerQuery;
 
     @Value("${response.format}")
     private String responseFormat;
 
-    public UriComponentsBuilder getUriComponentsBuilderForFoodSearch(String foodSearchKeyword) {
-        return UriComponentsBuilder.fromHttpUrl(foodSearchServiceURL + "/search")
+    @Value("${usda.requireAllWords}")
+    private String requireAllWords;
+
+    public UriComponentsBuilder getUriComponentsBuilderForFoodSearch(String foodSearchKeyword) throws ImproperRequestException {
+        sanitizeRequestParameter(foodSearchKeyword);
+
+        try {
+            String encodedSearchQuery = URLEncoder.encode(foodSearchKeyword, StandardCharsets.UTF_8.toString());
+            foodSearchKeyword = encodedSearchQuery;
+        } catch (UnsupportedEncodingException e) {
+            log.error("Failed to encode {}. The search will use the unchanged token");
+        }
+
+        return UriComponentsBuilder.fromHttpUrl(foodSearchServiceURL)
                 .queryParam("format", responseFormat)
-                .queryParam("q", foodSearchKeyword)
-                .queryParam("max", maxResultsPerQuery)
-                .queryParam("offset", 0)
+                .queryParam("generalSearchInput", foodSearchKeyword)
+                .queryParam("requireAllWords", requireAllWords)
                 .queryParam("api_key", foodServiceApiKey);
     }
 
-    public UriComponentsBuilder getUriComponentBuilderForFoodReport(String foodDbNo) {
-        return UriComponentsBuilder.fromHttpUrl(foodSearchServiceURL + "/reports")
+    public UriComponentsBuilder getUriComponentBuilderForFoodReport(String foodDbNo) throws ImproperRequestException {
+        sanitizeRequestParameter(foodDbNo);
+
+        return UriComponentsBuilder.fromHttpUrl(foodReportsServiceURL)
                 .queryParam("format", responseFormat)
                 .queryParam("ndbno", foodDbNo)
                 .queryParam("api_key", foodServiceApiKey);
+    }
+
+    private void sanitizeRequestParameter(String requestParameter) throws ImproperRequestException {
+        if (requestParameter == null || requestParameter.isEmpty()) {
+            throw new ImproperRequestException("Failed to send request: improper parameter");
+        }
     }
 }

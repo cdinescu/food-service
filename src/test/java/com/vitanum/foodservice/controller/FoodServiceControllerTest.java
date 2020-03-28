@@ -27,6 +27,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FoodServiceControllerTest {
     public static final String BANANA_DB_IDX = "09041";
+    public static final String FOOD_SEARCH_URL = "/foods/search";
+    public static final String FOOD_REPORTS_URL = "/foods/reports";
+
     @Autowired
     private WebTestClient client;
 
@@ -34,8 +37,21 @@ public class FoodServiceControllerTest {
     public void testGetFoodByGeneralSearchInput() {
         client.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/foods/search")
+                        .path(FOOD_SEARCH_URL)
                         .queryParam("foodSearchKeyword", "banana").build())
+                .accept(APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(APPLICATION_JSON)
+                .expectBody();
+    }
+
+    @Test
+    public void testGetFoodByGeneralSearchInputMultipleTokens() {
+        client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(FOOD_SEARCH_URL)
+                        .queryParam("foodSearchKeyword", "green pepper").build())
                 .accept(APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -47,8 +63,8 @@ public class FoodServiceControllerTest {
     public void testGetFoodByGeneralSearchInputWhenFoodNotFound() {
         client.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/foods/search")
-                        .queryParam("foodSearchKeyword", "random food").build())
+                        .path(FOOD_SEARCH_URL)
+                        .queryParam("foodSearchKeyword", "heeeeeeeeeeeeey").build())
                 .accept(APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isNotFound()
@@ -60,7 +76,7 @@ public class FoodServiceControllerTest {
     public void testGetFoodByGeneralSearchInputWhenQueryParamEmpty() {
         client.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/foods/search")
+                        .path(FOOD_SEARCH_URL)
                         .queryParam("foodSearchKeyword", "").build())
                 .accept(APPLICATION_JSON)
                 .exchange()
@@ -73,7 +89,7 @@ public class FoodServiceControllerTest {
     public void testGetFoodNutrients() {
         client.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/foods/reports")
+                        .path(FOOD_REPORTS_URL)
                         .queryParam("ndbNo", BANANA_DB_IDX).build())
                 .accept(APPLICATION_JSON)
                 .exchange()
@@ -86,7 +102,7 @@ public class FoodServiceControllerTest {
     public void testGetFoodNutrientsWhenFoodIndexHasWrongFormat() {
         client.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/foods/reports")
+                        .path(FOOD_REPORTS_URL)
                         .queryParam("ndbNo", "random").build())
                 .accept(APPLICATION_JSON)
                 .exchange()
@@ -99,7 +115,7 @@ public class FoodServiceControllerTest {
     public void testGetFoodNutrientsWhenFoodIndexNotFoundInDB() {
         client.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/foods/reports")
+                        .path(FOOD_REPORTS_URL)
                         .queryParam("ndbNo", "99999").build())
                 .accept(APPLICATION_JSON)
                 .exchange()

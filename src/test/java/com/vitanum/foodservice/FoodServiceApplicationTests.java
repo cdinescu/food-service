@@ -15,19 +15,13 @@
 package com.vitanum.foodservice;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class FoodServiceApplicationTests {
-    @Value("${max.results.per.query}")
-    private Integer maxResultsPerQuery;
 
     @Test
     void contextLoads() {
-        assertEquals(5, maxResultsPerQuery);
     }
 
 }

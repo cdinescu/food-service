@@ -17,19 +17,19 @@ package com.vitanum.foodservice.controller;
 import com.vitanum.foodservice.entities.Food;
 import com.vitanum.foodservice.entities.Nutrient;
 import com.vitanum.foodservice.exceptions.ImproperRequestException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/foods")
+@CrossOrigin
+@Slf4j
 public class FoodController {
     @Autowired
     private FoodService foodService;
@@ -41,6 +41,7 @@ public class FoodController {
      */
     @GetMapping("/search")
     public ResponseEntity<List<Food>> getFoodByGeneralSearchInput(@RequestParam String foodSearchKeyword) {
+        log.info("Search food by using keyword(s): {}", foodSearchKeyword);
         ResponseEntity<List<Food>> responseEntity;
 
         try {
@@ -53,13 +54,15 @@ public class FoodController {
     }
 
     /**
-     * fetches the nutrients of a food, bu using its unique database index.
+     * Fetches the nutrients of a food, bu using its unique database index.
      *
      * @param ndbNo the food unique identifier (as found in the USDA)
      */
     @GetMapping("/reports")
     public ResponseEntity<List<Nutrient>> getNutrition(@RequestParam String ndbNo) {
+        log.info("Search nutrient by using ndbNo: {}", ndbNo);
         ResponseEntity<List<Nutrient>> responseEntity;
+
         try {
             List<Nutrient> foodNutrients = foodService.getFoodNutritionValue(ndbNo);
             responseEntity = new ResponseEntity<>(foodNutrients, getHttpStatusBasedOnResult(foodNutrients));

@@ -38,6 +38,7 @@ public abstract class DataParser<T> {
 
         try {
             JsonParser parser = getJsonParser(body);
+            System.out.println(body);
             ObjectMapper objectMapper = getObjectMapper();
 
             allEntities = getUsdaEntities(parser, objectMapper);
@@ -48,11 +49,11 @@ public abstract class DataParser<T> {
         return allEntities;
     }
 
-    private ObjectMapper getObjectMapper() {
+    protected ObjectMapper getObjectMapper() {
         //create ObjectMapper instance
         ObjectMapper objectMapper = new ObjectMapper();
         // deserialize by using the root value as well
-        objectMapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         return objectMapper;
     }

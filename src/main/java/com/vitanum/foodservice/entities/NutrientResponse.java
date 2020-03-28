@@ -24,16 +24,10 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @JsonRootName(value = "report")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NutrientResponse {
-    @JsonProperty
-    private String sr;
-    @JsonProperty
-    private String type;
-    @JsonProperty
-    private Food food;
-
+    @JsonProperty("food")
+    private NutrientResponseFood food;
 }

@@ -21,19 +21,15 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FoodServiceTest {
     private static final Logger LOG = LoggerFactory.getLogger(FoodServiceTest.class);
-
-    @Value("${max.results.per.query}")
-    private Integer maxResultsPerQuery;
 
     @Autowired
     private FoodService foodService;
@@ -45,8 +41,7 @@ public class FoodServiceTest {
 
         // Assert
         assertNotNull(retrievedFoods);
-        assertEquals(maxResultsPerQuery, retrievedFoods.size());
-        boolean allMatch = retrievedFoods.stream().allMatch(food -> food.getName().toLowerCase().contains("banana"));
+        boolean allMatch = retrievedFoods.stream().allMatch(food -> food.getDescription().toLowerCase().contains("banana"));
         assertTrue(allMatch);
     }
 
