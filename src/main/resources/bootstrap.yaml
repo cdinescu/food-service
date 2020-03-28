@@ -4,20 +4,16 @@ spring:
   profiles:
     active:
       default
+  cloud:
+    config:
+      uri: http://config-server:8012
+      name: config-server
+      failFast: true
+      retry:
+        maxAttempts: 20
+
 server:
-  port: 9090
+  port: 0
 
-usda:
-  search:
-    url: https://api.nal.usda.gov/fdc/v1/search
-  reports:
-    url: https://api.nal.usda.gov/ndb/reports
-  requireAllWords: true
-
-api:
-  key: r2zVHijDn5Q31pBPsS14i8kxKE3ayyOBKaxaJtWc
-
-response:
-  format: json
 
 

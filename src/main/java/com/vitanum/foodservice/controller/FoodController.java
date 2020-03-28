@@ -28,7 +28,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/foods")
-@CrossOrigin
 @Slf4j
 public class FoodController {
     @Autowired
