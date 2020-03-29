@@ -43,7 +43,7 @@ public abstract class DataParser<T> {
 
             allEntities = getUsdaEntities(parser, objectMapper);
         } catch (IOException exception) {
-            LOG.error("Failed to extract food: ", exception);
+            LOG.error("Failed to extract object from JSON: ", exception);
         }
 
         return allEntities;

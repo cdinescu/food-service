@@ -14,6 +14,7 @@
 
 package com.vitanum.foodservice.controller;
 
+import com.vitanum.foodservice.constants.Constants;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class FoodServiceControllerTest {
-    public static final String BANANA_DB_IDX = "09041";
-    public static final String FOOD_SEARCH_URL = "/foods/search";
-    public static final String FOOD_REPORTS_URL = "/foods/reports";
+public class FoodServiceControllerTest implements Constants {
 
     @Autowired
     private WebTestClient client;
@@ -89,8 +87,8 @@ public class FoodServiceControllerTest {
     public void testGetFoodNutrients() {
         client.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path(FOOD_REPORTS_URL)
-                        .queryParam("ndbNo", BANANA_DB_IDX).build())
+                        .path(FOOD_REPORTS_URL + "/" + FOOD_ID)
+                        .build())
                 .accept(APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -102,27 +100,12 @@ public class FoodServiceControllerTest {
     public void testGetFoodNutrientsWhenFoodIndexHasWrongFormat() {
         client.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path(FOOD_REPORTS_URL)
-                        .queryParam("ndbNo", "random").build())
+                        .path(FOOD_REPORTS_URL + "/random")
+                        .build())
                 .accept(APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectHeader().contentType(APPLICATION_JSON)
                 .expectBody();
     }
-
-    @Test
-    public void testGetFoodNutrientsWhenFoodIndexNotFoundInDB() {
-        client.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(FOOD_REPORTS_URL)
-                        .queryParam("ndbNo", "99999").build())
-                .accept(APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isNotFound()
-                .expectHeader().contentType(APPLICATION_JSON)
-                .expectBody();
-    }
-
-
 }

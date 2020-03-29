@@ -59,12 +59,11 @@ public class UriComponentBuilderUtils {
                 .queryParam("api_key", foodServiceApiKey);
     }
 
-    public UriComponentsBuilder getUriComponentBuilderForFoodReport(String foodDbNo) throws ImproperRequestException {
-        sanitizeRequestParameter(foodDbNo);
+    public UriComponentsBuilder getUriComponentBuilderForFoodReport(String foodId) throws ImproperRequestException {
+        sanitizeRequestParameter(foodId);
 
-        return UriComponentsBuilder.fromHttpUrl(foodReportsServiceURL)
+        return UriComponentsBuilder.fromHttpUrl(foodReportsServiceURL + "/" + foodId)
                 .queryParam("format", responseFormat)
-                .queryParam("ndbno", foodDbNo)
                 .queryParam("api_key", foodServiceApiKey);
     }
 

@@ -15,7 +15,7 @@
 package com.vitanum.foodservice.controller;
 
 import com.vitanum.foodservice.entities.Food;
-import com.vitanum.foodservice.entities.Nutrient;
+import com.vitanum.foodservice.entities.FoodNutrient;
 import com.vitanum.foodservice.exceptions.ImproperRequestException;
 import com.vitanum.foodservice.http.utils.HttpUtils;
 import com.vitanum.foodservice.response.parser.ResponseJsonParser;
@@ -50,10 +50,10 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public List<Nutrient> getFoodNutritionValue(String ndbNo) throws ImproperRequestException {
+    public List<FoodNutrient> getFoodNutritionValue(String foodId) throws ImproperRequestException {
         // set-up the HTTP header and URI builder
         HttpHeaders headers = HttpUtils.createHttpHeader();
-        UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentBuilderForFoodReport(ndbNo);
+        UriComponentsBuilder builder = uriComponentBuilderUtils.getUriComponentBuilderForFoodReport(foodId);
 
         // return the nutrients extracted from the response
         return ResponseJsonParser.extractNutrients(getResponse(headers, builder));

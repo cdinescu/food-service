@@ -15,7 +15,7 @@
 package com.vitanum.foodservice.controller;
 
 import com.vitanum.foodservice.entities.Food;
-import com.vitanum.foodservice.entities.Nutrient;
+import com.vitanum.foodservice.entities.FoodNutrient;
 import com.vitanum.foodservice.exceptions.ImproperRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,15 +56,15 @@ public class FoodController {
     /**
      * Fetches the nutrients of a food, bu using its unique database index.
      *
-     * @param ndbNo the food unique identifier (as found in the USDA)
+     * @param foodId Unique ID of the food.
      */
-    @GetMapping("/reports")
-    public ResponseEntity<List<Nutrient>> getNutrition(@RequestParam String ndbNo) {
-        log.info("Search nutrient by using ndbNo: {}", ndbNo);
-        ResponseEntity<List<Nutrient>> responseEntity;
+    @GetMapping("/reports/{foodId}")
+    public ResponseEntity<List<FoodNutrient>> getNutrition(@PathVariable String foodId) {
+        log.info("Search nutrient by using ndbNo: {}", foodId);
+        ResponseEntity<List<FoodNutrient>> responseEntity;
 
         try {
-            List<Nutrient> foodNutrients = foodService.getFoodNutritionValue(ndbNo);
+            List<FoodNutrient> foodNutrients = foodService.getFoodNutritionValue(foodId);
             responseEntity = new ResponseEntity<>(foodNutrients, getHttpStatusBasedOnResult(foodNutrients));
         } catch (ImproperRequestException e) {
             responseEntity = new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);

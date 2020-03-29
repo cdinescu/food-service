@@ -5,14 +5,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NutrientResponseFood {
+public class FoodNutrient {
     @JsonProperty
-    private List<Nutrient> nutrients;
+    private String type;
+
+    @JsonProperty
+    private Nutrient nutrient;
 }

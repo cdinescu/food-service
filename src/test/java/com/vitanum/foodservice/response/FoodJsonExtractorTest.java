@@ -38,7 +38,7 @@ public class FoodJsonExtractorTest {
         List<Food> foodList = foodListParser.parseData(body);
 
         // Assert
-        assertEquals(0, foodList.size());
+        assertEquals(2, foodList.size());
     }
 
     @Test
@@ -120,7 +120,7 @@ public class FoodJsonExtractorTest {
     private void check(Food food) {
         LOG.info("Testing food: " + food);
         assertNotNull(food.getDescription());
-        assertNotNull(food.getNdbNumber());
+        assertNotNull(food.getFdcId());
     }
 
 }

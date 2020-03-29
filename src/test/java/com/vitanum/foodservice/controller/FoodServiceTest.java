@@ -15,6 +15,7 @@
 package com.vitanum.foodservice.controller;
 
 import com.vitanum.foodservice.entities.Food;
+import com.vitanum.foodservice.entities.FoodNutrient;
 import com.vitanum.foodservice.entities.Nutrient;
 import com.vitanum.foodservice.exceptions.ImproperRequestException;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
+import static com.vitanum.foodservice.constants.Constants.FOOD_ID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -58,7 +60,7 @@ public class FoodServiceTest {
     @Test
     public void testGetFoodNutrients() throws ImproperRequestException {
         // Act
-        List<Nutrient> foodNutrients = foodService.getFoodNutritionValue("09041");
+        List<FoodNutrient> foodNutrients = foodService.getFoodNutritionValue(FOOD_ID);
 
         // Assert
         assertNotNull(foodNutrients);

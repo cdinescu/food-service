@@ -16,31 +16,23 @@ package com.vitanum.foodservice.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.List;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonRootName(value = "nutrient")
 public class Nutrient {
     @JsonProperty
-    private String nutrient_id;
+    String number;
     @JsonProperty
-    private String name;
+    String name;
     @JsonProperty
-    private String derivation;
-    @JsonProperty
-    private String group;
-    @JsonProperty
-    private String unit;
-    @JsonProperty
-    private String value;
-    @JsonProperty
-    private List<Measurement> measures;
+    String unitName;
 }

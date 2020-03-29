@@ -3,7 +3,7 @@ usda:
   search:
     url: https://api.nal.usda.gov/fdc/v1/search
   reports:
-    url: https://api.nal.usda.gov/ndb/reports
+    url: https://api.nal.usda.gov/fdc/v1
   requireAllWords: true
 
 api:
