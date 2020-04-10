@@ -18,7 +18,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vitanum.foodservice.entities.FoodNutrient;
 import com.vitanum.foodservice.entities.FoodReportResponse;
-import com.vitanum.foodservice.entities.Nutrient;
 
 import java.io.IOException;
 import java.util.ArrayList;

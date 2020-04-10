@@ -16,7 +16,6 @@ package com.vitanum.foodservice.response.parser;
 
 import com.vitanum.foodservice.entities.Food;
 import com.vitanum.foodservice.entities.FoodNutrient;
-import com.vitanum.foodservice.entities.Nutrient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
