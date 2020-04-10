@@ -18,4 +18,7 @@ public class FoodNutrient {
 
     @JsonProperty
     private Nutrient nutrient;
+
+    @JsonProperty
+    private Double amount;
 }

@@ -28,6 +28,8 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.junit.Assert.assertNotNull;
+
 /**
  * Test class for NutrientJsonExtractor.
  */
@@ -44,7 +46,11 @@ public class NutrientJsonExtractorTest {
         List<FoodNutrient> nutrientList = nutrientListParser.parseData(body);
 
         // Assert
-        Assert.assertEquals(113, nutrientList.size());
+        nutrientList.stream().forEach(foodNutrient ->{
+            assertNotNull(foodNutrient.getNutrient());
+            assertNotNull(foodNutrient.getAmount());
+        });
+        Assert.assertEquals(65, nutrientList.size());
     }
 
     @Test
