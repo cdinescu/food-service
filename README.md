@@ -1,9 +1,9 @@
 # food-service
-This is the heart of the architeccture, because it is the provider of:
+This is the heart of the architecture, because it is the provider of:
 - food names
 - food nutritional values
 
-The data has been obtained by querying USDA REST Api: https://fdc.nal.usda.gov/help.html.
+The data has been obtained by querying USDA R Api: https://fdc.nal.usda.gov/help.html.
 
 Technology stack:
 - Spring Framework
