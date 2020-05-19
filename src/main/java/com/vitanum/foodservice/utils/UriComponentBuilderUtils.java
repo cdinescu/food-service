@@ -41,19 +41,19 @@ public class UriComponentBuilderUtils {
     private String requireAllWords;
 
     public UriComponentsBuilder getUriComponentsBuilderForFoodSearch(String foodSearchKeyword, Integer pageNumber) throws ImproperRequestException {
-        sanitizeRequestParameter(foodSearchKeyword);
+        String searchKeyword = foodSearchKeyword;
+        sanitizeRequestParameter(searchKeyword);
 
-        foodSearchKeyword = foodSearchKeyword.replaceAll(",", "");
+        searchKeyword = searchKeyword.replaceAll(",", "");
         try {
-            foodSearchKeyword = URLEncoder.encode(foodSearchKeyword, StandardCharsets.UTF_8.toString());
+            searchKeyword = URLEncoder.encode(searchKeyword, StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
-            log.error("Failed to encode {}. The search will use the unchanged token", foodSearchKeyword);
+            log.error("Failed to encode {}. The search will use the unchanged token.", searchKeyword);
         }
 
-        System.out.println("Search: " + foodSearchKeyword);
         return UriComponentsBuilder.fromHttpUrl(foodSearchServiceURL)
                 .queryParam("format", responseFormat)
-                .queryParam("generalSearchInput", foodSearchKeyword)
+                .queryParam("generalSearchInput", searchKeyword)
                 .queryParam("requireAllWords", requireAllWords)
                 .queryParam("pageNumber", pageNumber)
                 .queryParam("api_key", foodServiceApiKey);

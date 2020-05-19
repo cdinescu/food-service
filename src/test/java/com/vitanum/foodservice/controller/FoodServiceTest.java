@@ -26,7 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static com.vitanum.foodservice.constants.Constants.FOOD_ID;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FoodServiceTest {
