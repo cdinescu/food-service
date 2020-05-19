@@ -26,7 +26,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static com.vitanum.foodservice.constants.Constants.FOOD_ID;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FoodServiceTest {
