@@ -31,7 +31,7 @@ public class FoodJsonExtractorTest {
     private final FoodListParser foodListParser = new FoodListParser();
 
     @Test
-    public void testGetFoodResponseBodyOK_FoodWithoutNdbno() {
+    public void testGetFoodResponseBodyOKFoodWithoutNdbno() {
         String body = createFoosResponseBodyWithoutNdbno();
 
         // Act
@@ -111,10 +111,6 @@ public class FoodJsonExtractorTest {
                 "}\n" +
                 "]\n" +
                 "}";
-    }
-
-    private void checkFields(List<Food> foodList) {
-        foodList.stream().forEach(this::check);
     }
 
     private void check(Food food) {

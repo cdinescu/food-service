@@ -28,8 +28,8 @@ import lombok.ToString;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Food {
     @JsonProperty
-    String fdcId;
+    private String fdcId;
 
     @JsonProperty
-    String description;
+    private String description;
 }
