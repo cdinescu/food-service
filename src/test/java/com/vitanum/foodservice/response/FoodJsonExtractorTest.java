@@ -112,11 +112,4 @@ public class FoodJsonExtractorTest {
                 "]\n" +
                 "}";
     }
-
-    private void check(Food food) {
-        LOG.info("Testing food: " + food);
-        assertNotNull(food.getDescription());
-        assertNotNull(food.getFdcId());
-    }
-
 }

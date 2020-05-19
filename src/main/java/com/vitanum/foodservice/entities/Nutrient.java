@@ -30,9 +30,9 @@ import lombok.ToString;
 @JsonRootName(value = "nutrient")
 public class Nutrient {
     @JsonProperty
-    String number;
+    private String number;
     @JsonProperty
-    String name;
+    private String name;
     @JsonProperty
-    String unitName;
+    private String unitName;
 }
