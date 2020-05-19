@@ -33,7 +33,7 @@ public class FoodServiceControllerTest implements Constants {
 
     @Test
     public void testGetFoodByGeneralSearchInput() {
-        client.get()
+        WebTestClient.BodyContentSpec bodyContentSpec = client.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(FOOD_SEARCH_URL)
                         .queryParam("foodSearchKeyword", "banana").build())
