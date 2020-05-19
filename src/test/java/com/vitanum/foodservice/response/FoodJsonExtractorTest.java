@@ -20,14 +20,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FoodJsonExtractorTest {
-    private static final Logger LOG = Logger.getLogger(FoodJsonExtractorTest.class.getName());
     private final FoodListParser foodListParser = new FoodListParser();
 
     @Test
@@ -112,11 +109,4 @@ public class FoodJsonExtractorTest {
                 "]\n" +
                 "}";
     }
-
-    private void check(Food food) {
-        LOG.info("Testing food: " + food);
-        assertNotNull(food.getDescription());
-        assertNotNull(food.getFdcId());
-    }
-
 }
