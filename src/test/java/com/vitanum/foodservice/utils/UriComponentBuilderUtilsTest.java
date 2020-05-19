@@ -17,30 +17,29 @@ public class UriComponentBuilderUtilsTest {
     private UriComponentBuilderUtils builderUtil = new UriComponentBuilderUtils();
 
     @Test
-    public void getUriComponentsBuilderForFoodSearch_NullToken() {
+    public void getUriComponentsBuilderForFoodSearchNullToken() {
         assertThrows(ImproperRequestException.class, () ->
                 builderUtil.getUriComponentsBuilderForFoodSearch(null, 0));
     }
 
     @Test
-    public void getUriComponentsBuilderForFoodSearch_EmptyToken() {
+    public void getUriComponentsBuilderForFoodSearchEmptyToken() {
         assertThrows(ImproperRequestException.class, () ->
                 builderUtil.getUriComponentsBuilderForFoodSearch("", 0)
         );
     }
 
     @Test
-    public void getUriComponentBuilderForFoodReport_NullToken() {
+    public void getUriComponentBuilderForFoodReportNullToken() {
         assertThrows(ImproperRequestException.class, () ->
                 builderUtil.getUriComponentBuilderForFoodReport(null)
         );
     }
 
     @Test
-    public void getUriComponentBuilderForFoodReport_EmptyToken() {
+    public void getUriComponentBuilderForFoodReportEmptyToken() {
         assertThrows(ImproperRequestException.class, () ->
                 builderUtil.getUriComponentBuilderForFoodReport("")
         );
     }
-
 }

@@ -32,17 +32,17 @@ public class FoodServiceApplication {
     }
 
     @Bean
-    RestTemplate restTemplate() {
+    public RestTemplate restTemplate() {
         return new RestTemplate();
     }
 
     @Bean
-    FoodService foodService() {
+    public FoodService foodService() {
         return new FoodServiceImpl();
     }
 
     @Bean
-    UriComponentBuilderUtils uriBuilder() {
+    public UriComponentBuilderUtils uriBuilder() {
         return new UriComponentBuilderUtils();
     }
 }

@@ -3,7 +3,7 @@ This is the heart of the architecture, because it is the provider of:
 - food names
 - food nutritional values
 
-The data has been obtained by querying USDA R Api: https://fdc.nal.usda.gov/help.html.
+The data has been obtained by querying USDA Api: https://fdc.nal.usda.gov/help.html.
 
 Technology stack:
 - Spring Framework
