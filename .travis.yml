@@ -1,13 +1,12 @@
 language: java
 
-install: pip install codecov
-
 script:
   - ./gradlew build --scan -s
-  - ./gradlew jacocoTestReport
+  - ./gradlew check
+
 
 after_success:
-  - codecov
+  - bash <(curl -Ls https://coverage.codacy.com/get.sh) report -l Java -r build/reports/jacoco/report.xml
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
