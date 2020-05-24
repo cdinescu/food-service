@@ -6,6 +6,7 @@ script:
 
 
 after_success:
+  - echo "Key: ${CODACY_PROJECT_TOKEN}"
   - bash <(curl -Ls https://coverage.codacy.com/get.sh) report -l Java -r build/reports/jacoco/report.xml
 
 before_cache:
