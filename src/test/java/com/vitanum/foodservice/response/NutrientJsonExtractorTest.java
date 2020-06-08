@@ -16,6 +16,7 @@ package com.vitanum.foodservice.response;
 
 import com.vitanum.foodservice.entities.FoodNutrient;
 import com.vitanum.foodservice.response.parser.NutrientListParser;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,6 +35,7 @@ import static org.junit.Assert.assertNotNull;
  * Test class for NutrientJsonExtractor.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Slf4j
 public class NutrientJsonExtractorTest {
     private final NutrientListParser nutrientListParser = new NutrientListParser();
 
@@ -46,7 +48,7 @@ public class NutrientJsonExtractorTest {
         List<FoodNutrient> nutrientList = nutrientListParser.parseData(body);
 
         // Assert
-        nutrientList.stream().forEach(foodNutrient ->{
+        nutrientList.forEach(foodNutrient -> {
             assertNotNull(foodNutrient.getNutrient());
             assertNotNull(foodNutrient.getAmount());
         });
@@ -91,9 +93,8 @@ public class NutrientJsonExtractorTest {
 
     private String getReportResponseBody() {
         String reportBody = "";
-        InputStream resource = null;
         try {
-            resource = new ClassPathResource(
+            InputStream resource = new ClassPathResource(
                     "data/reportResponse.json").getInputStream();
 
             try (BufferedReader reader = new BufferedReader(
@@ -101,8 +102,10 @@ public class NutrientJsonExtractorTest {
                 reportBody = reader.lines()
                         .collect(Collectors.joining("\n"));
             } catch (IOException e) {
+                log.error("Failed to read file: ", e);
             }
         } catch (IOException e) {
+            log.error("Failed to read file: ", e);
         }
 
         return reportBody;

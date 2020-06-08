@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UriComponentBuilderUtilsTest {
-    private UriComponentBuilderUtils builderUtil = new UriComponentBuilderUtils();
+    private final UriComponentBuilderUtils builderUtil = new UriComponentBuilderUtils();
 
     @Test
     public void getUriComponentsBuilderForFoodSearchNullToken() {
