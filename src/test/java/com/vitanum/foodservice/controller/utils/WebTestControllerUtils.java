@@ -19,7 +19,7 @@ public class WebTestControllerUtils {
     }
 
     public static void checkAuthorizedAccess(WebTestClient client, Function<UriBuilder, URI> uriFunction, Jwt jwt, HttpStatus expectedHttpStatus) {
-        WebTestClient.BodyContentSpec bodyContentSpec = client.get()
+        client.get()
                 .uri(uriFunction)
                 .accept(APPLICATION_JSON)
                 .headers(addJwt(jwt))
@@ -30,7 +30,7 @@ public class WebTestControllerUtils {
     }
 
     public static void checkUnAuthorizedAccess(WebTestClient client, Function<UriBuilder, URI> uriFunction, Jwt jwt) {
-        WebTestClient.BodyContentSpec bodyContentSpec = client.get()
+        client.get()
                 .uri(uriFunction)
                 .accept(APPLICATION_JSON)
                 .exchange()
