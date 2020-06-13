@@ -32,9 +32,9 @@ public class WebTestControllerUtils {
     public static void checkUnAuthorizedAccess(WebTestClient client, Function<UriBuilder, URI> uriFunction, Jwt jwt) {
         client.get()
                 .uri(uriFunction)
-                .headers(addJwt(jwt))
                 .accept(APPLICATION_JSON)
                 .exchange()
+                .expectStatus().isEqualTo(HttpStatus.UNAUTHORIZED)
                 .expectBody();
     }
 

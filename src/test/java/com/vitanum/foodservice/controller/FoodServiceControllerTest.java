@@ -14,7 +14,6 @@
 
 package com.vitanum.foodservice.controller;
 
-import com.vitanum.foodservice.constants.Constants;
 import com.vitanum.foodservice.controller.utils.WebTestControllerUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,12 +33,15 @@ import java.net.URI;
 import java.util.Map;
 import java.util.function.Function;
 
+import static com.vitanum.foodservice.constants.Constants.FOOD_ID;
+import static com.vitanum.foodservice.constants.Constants.FOOD_REPORTS_URL;
+import static com.vitanum.foodservice.constants.Constants.FOOD_SEARCH_URL;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class FoodServiceControllerTest implements Constants {
+public class FoodServiceControllerTest {
 
     @Autowired
     private WebTestClient client;
@@ -74,20 +76,6 @@ public class FoodServiceControllerTest implements Constants {
 
         // Act & Assert
         WebTestControllerUtils.checkUnAuthorizedAccess(client, uriFunction, myJwt);
-    }
-
-    @Test
-    public void testRequestWithWrongToken() {
-        // Arrange
-        Jwt wrongToken = new Jwt("token", null, null,
-                Map.of("alg", "none"), Map.of("sub", "Dave"));
-
-        Function<UriBuilder, URI> uriFunction = uriBuilder -> uriBuilder
-                .path(FOOD_SEARCH_URL)
-                .queryParam("foodSearchKeyword", "banana").build();
-
-        // Act & Assert
-        WebTestControllerUtils.checkUnAuthorizedAccess(client, uriFunction, wrongToken);
     }
 
     @Test
