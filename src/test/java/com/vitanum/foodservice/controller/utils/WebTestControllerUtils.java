@@ -29,7 +29,7 @@ public class WebTestControllerUtils {
                 .expectBody();
     }
 
-    public static void checkUnAuthorizedAccess(WebTestClient client, Function<UriBuilder, URI> uriFunction, Jwt jwt) {
+    public static void checkUnAuthorizedAccess(WebTestClient client, Function<UriBuilder, URI> uriFunction) {
         client.get()
                 .uri(uriFunction)
                 .accept(APPLICATION_JSON)

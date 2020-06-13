@@ -49,7 +49,7 @@ public class FoodServiceControllerTest {
     @MockBean
     private ReactiveJwtDecoder jwtDecoder;
 
-    private final Jwt myJwt = jwt();
+    private final Jwt myJwt = jwt("token");
 
     @BeforeEach
     void setUp() {
@@ -75,7 +75,7 @@ public class FoodServiceControllerTest {
                 .queryParam("foodSearchKeyword", "banana").build();
 
         // Act & Assert
-        WebTestControllerUtils.checkUnAuthorizedAccess(client, uriFunction, myJwt);
+        WebTestControllerUtils.checkUnAuthorizedAccess(client, uriFunction);
     }
 
     @Test
@@ -133,8 +133,8 @@ public class FoodServiceControllerTest {
         WebTestControllerUtils.checkAuthorizedAccess(client, uriFunction, myJwt, HttpStatus.NOT_FOUND);
     }
 
-    private Jwt jwt() {
-        return new Jwt("token", null, null,
+    private Jwt jwt(String tokenValue) {
+        return new Jwt(tokenValue, null, null,
                 Map.of("alg", "none"), Map.of("sub", "cristina"));
     }
 }
