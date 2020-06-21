@@ -48,7 +48,8 @@ public class FoodController {
     public Mono<ResponseEntity<List<Food>>> getFoodByGeneralSearchInput(@RequestParam String foodSearchKeyword,
                                                                         @RequestParam(required = false, defaultValue = "0") Integer pageNumber) {
         log.info("Search food by using keyword(s): {}", foodSearchKeyword);
-        return Mono.fromCallable(() -> getDeferredListResponseEntity(foodSearchKeyword, pageNumber)).subscribeOn(Schedulers.boundedElastic());
+        return Mono.fromCallable(() -> getDeferredListResponseEntity(foodSearchKeyword, pageNumber))
+                .publishOn(Schedulers.boundedElastic());
     }
 
     private ResponseEntity<List<Food>> getDeferredListResponseEntity(@RequestParam String foodSearchKeyword, @RequestParam(required = false, defaultValue = "0") Integer pageNumber) {
@@ -74,7 +75,8 @@ public class FoodController {
     public Mono<ResponseEntity<List<FoodNutrient>>> getNutrition(@PathVariable String foodId) {
         log.info("Search nutrient by using ndbNo: {}", foodId);
 
-        return Mono.fromCallable(() -> getDeferredNutrition(foodId)).subscribeOn(Schedulers.boundedElastic());
+        return Mono.fromCallable(() -> getDeferredNutrition(foodId))
+                .publishOn(Schedulers.boundedElastic());
     }
 
     private ResponseEntity<List<FoodNutrient>> getDeferredNutrition(@PathVariable String foodId) {
