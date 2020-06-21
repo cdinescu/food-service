@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,17 +48,21 @@ public class FoodController {
     public Mono<ResponseEntity<List<Food>>> getFoodByGeneralSearchInput(@RequestParam String foodSearchKeyword,
                                                                         @RequestParam(required = false, defaultValue = "0") Integer pageNumber) {
         log.info("Search food by using keyword(s): {}", foodSearchKeyword);
-        return Mono.fromCallable(() -> {
-            ResponseEntity<List<Food>> responseEntity;
+        return Mono.fromCallable(() -> getDeferredListResponseEntity(foodSearchKeyword, pageNumber)).subscribeOn(Schedulers.boundedElastic());
+    }
 
-            try {
-                List<Food> foodByName = foodService.getFoodByName(foodSearchKeyword, pageNumber);
-                responseEntity = new ResponseEntity<>(foodByName, getHttpStatusBasedOnResult(foodByName));
-            } catch (ImproperRequestException e) {
-                responseEntity = new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
-            }
-            return responseEntity;
-        });
+    private ResponseEntity<List<Food>> getDeferredListResponseEntity(@RequestParam String foodSearchKeyword, @RequestParam(required = false, defaultValue = "0") Integer pageNumber) {
+        ResponseEntity<List<Food>> responseEntity;
+
+        try {
+            List<Food> foodByName = foodService.getFoodByName(foodSearchKeyword, pageNumber);
+            responseEntity = new ResponseEntity<>(foodByName, getHttpStatusBasedOnResult(foodByName));
+        } catch (ImproperRequestException e) {
+            responseEntity = new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+        }
+
+        log.info("Got: {} in thread {}", responseEntity, Thread.currentThread().getName());
+        return responseEntity;
     }
 
     /**
@@ -69,17 +74,21 @@ public class FoodController {
     public Mono<ResponseEntity<List<FoodNutrient>>> getNutrition(@PathVariable String foodId) {
         log.info("Search nutrient by using ndbNo: {}", foodId);
 
-        return Mono.fromCallable(() -> {
-            ResponseEntity<List<FoodNutrient>> responseEntity;
+        return Mono.fromCallable(() -> getDeferredNutrition(foodId)).subscribeOn(Schedulers.boundedElastic());
+    }
 
-            try {
-                List<FoodNutrient> foodNutrients = foodService.getFoodNutritionValue(foodId);
-                responseEntity = new ResponseEntity<>(foodNutrients, getHttpStatusBasedOnResult(foodNutrients));
-            } catch (ImproperRequestException e) {
-                responseEntity = new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
-            }
-            return responseEntity;
-        });
+    private ResponseEntity<List<FoodNutrient>> getDeferredNutrition(@PathVariable String foodId) {
+        ResponseEntity<List<FoodNutrient>> responseEntity;
+
+        try {
+            List<FoodNutrient> foodNutrients = foodService.getFoodNutritionValue(foodId);
+            responseEntity = new ResponseEntity<>(foodNutrients, getHttpStatusBasedOnResult(foodNutrients));
+        } catch (ImproperRequestException e) {
+            responseEntity = new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+        }
+
+        log.info("Got: {} in thread {}", responseEntity, Thread.currentThread().getName());
+        return responseEntity;
     }
 
     private HttpStatus getHttpStatusBasedOnResult(List<?> list) {

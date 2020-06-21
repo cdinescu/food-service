@@ -29,7 +29,7 @@ public class FoodJsonExtractorTest {
 
     @Test
     public void testGetFoodResponseBodyOKFoodWithoutNdbno() {
-        String body = createFoosResponseBodyWithoutNdbno();
+        String body = createFoodResponseBodyWithoutNdbno();
 
         // Act
         List<Food> foodList = foodListParser.parseData(body);
@@ -73,7 +73,7 @@ public class FoodJsonExtractorTest {
         assertEquals(0, foodList.size());
     }
 
-    private String createFoosResponseBodyWithoutNdbno() {
+    private String createFoodResponseBodyWithoutNdbno() {
         return "{\n" +
                 "\"foodSearchCriteria\": {\n" +
                 "\"generalSearchInput\": \"Banana\",\n" +

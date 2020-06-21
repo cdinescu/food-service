@@ -18,11 +18,13 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class DataParser<T> {
@@ -30,15 +32,13 @@ public abstract class DataParser<T> {
 
 
     public List<T> parseData(String body) {
+        return Strings.isBlank(body) ? Collections.emptyList() : parseDataFrom(body);
+    }
+
+    private List<T> parseDataFrom(String body) {
         List<T> allEntities = new ArrayList<>();
-
-        if (body == null) {
-            return new ArrayList<>();
-        }
-
         try {
             JsonParser parser = getJsonParser(body);
-            System.out.println(body);
             ObjectMapper objectMapper = getObjectMapper();
 
             allEntities = getUsdaEntities(parser, objectMapper);

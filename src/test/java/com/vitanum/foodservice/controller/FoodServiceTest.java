@@ -45,7 +45,7 @@ public class FoodServiceTest {
 
         // Assert
         assertNotNull(retrievedFoods);
-        boolean allMatch = retrievedFoods.stream().allMatch(food -> food.getDescription().toLowerCase().contains("banana"));
+        boolean allMatch = retrievedFoods.stream().peek(food -> LOG.info("Food: {}", food)).allMatch(food -> food.getDescription().toLowerCase().contains("banana"));
         assertTrue(allMatch);
     }
 
