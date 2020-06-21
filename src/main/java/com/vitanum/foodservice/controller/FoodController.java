@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,18 +44,20 @@ public class FoodController {
      * @param foodSearchKeyword the search keyword
      */
     @GetMapping("/search")
-    public ResponseEntity<List<Food>> getFoodByGeneralSearchInput(@RequestParam String foodSearchKeyword,
-                                                                  @RequestParam(required = false, defaultValue = "0") Integer pageNumber) {
+    public Mono<ResponseEntity<List<Food>>> getFoodByGeneralSearchInput(@RequestParam String foodSearchKeyword,
+                                                                        @RequestParam(required = false, defaultValue = "0") Integer pageNumber) {
         log.info("Search food by using keyword(s): {}", foodSearchKeyword);
-        ResponseEntity<List<Food>> responseEntity;
+        return Mono.fromCallable(() -> {
+            ResponseEntity<List<Food>> responseEntity;
 
-        try {
-            List<Food> foodByName = foodService.getFoodByName(foodSearchKeyword, pageNumber);
-            responseEntity = new ResponseEntity<>(foodByName, getHttpStatusBasedOnResult(foodByName));
-        } catch (ImproperRequestException e) {
-            responseEntity = new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
-        }
-        return responseEntity;
+            try {
+                List<Food> foodByName = foodService.getFoodByName(foodSearchKeyword, pageNumber);
+                responseEntity = new ResponseEntity<>(foodByName, getHttpStatusBasedOnResult(foodByName));
+            } catch (ImproperRequestException e) {
+                responseEntity = new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+            }
+            return responseEntity;
+        });
     }
 
     /**
@@ -63,17 +66,20 @@ public class FoodController {
      * @param foodId Unique ID of the food.
      */
     @GetMapping("/reports/{foodId}")
-    public ResponseEntity<List<FoodNutrient>> getNutrition(@PathVariable String foodId) {
+    public Mono<ResponseEntity<List<FoodNutrient>>> getNutrition(@PathVariable String foodId) {
         log.info("Search nutrient by using ndbNo: {}", foodId);
-        ResponseEntity<List<FoodNutrient>> responseEntity;
 
-        try {
-            List<FoodNutrient> foodNutrients = foodService.getFoodNutritionValue(foodId);
-            responseEntity = new ResponseEntity<>(foodNutrients, getHttpStatusBasedOnResult(foodNutrients));
-        } catch (ImproperRequestException e) {
-            responseEntity = new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
-        }
-        return responseEntity;
+        return Mono.fromCallable(() -> {
+            ResponseEntity<List<FoodNutrient>> responseEntity;
+
+            try {
+                List<FoodNutrient> foodNutrients = foodService.getFoodNutritionValue(foodId);
+                responseEntity = new ResponseEntity<>(foodNutrients, getHttpStatusBasedOnResult(foodNutrients));
+            } catch (ImproperRequestException e) {
+                responseEntity = new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+            }
+            return responseEntity;
+        });
     }
 
     private HttpStatus getHttpStatusBasedOnResult(List<?> list) {
