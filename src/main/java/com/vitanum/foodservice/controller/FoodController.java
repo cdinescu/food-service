@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +45,13 @@ public class FoodController {
      * @param foodSearchKeyword the search keyword
      */
     @GetMapping("/search")
-    public ResponseEntity<List<Food>> getFoodByGeneralSearchInput(@RequestParam String foodSearchKeyword,
-                                                                  @RequestParam(required = false, defaultValue = "0") Integer pageNumber) {
+    public Mono<ResponseEntity<List<Food>>> getFoodByGeneralSearchInput(@RequestParam String foodSearchKeyword,
+                                                                        @RequestParam(required = false, defaultValue = "0") Integer pageNumber) {
         log.info("Search food by using keyword(s): {}", foodSearchKeyword);
+        return Mono.fromCallable(() -> getDeferredListResponseEntity(foodSearchKeyword, pageNumber)).subscribeOn(Schedulers.boundedElastic());
+    }
+
+    private ResponseEntity<List<Food>> getDeferredListResponseEntity(@RequestParam String foodSearchKeyword, @RequestParam(required = false, defaultValue = "0") Integer pageNumber) {
         ResponseEntity<List<Food>> responseEntity;
 
         try {
@@ -54,6 +60,8 @@ public class FoodController {
         } catch (ImproperRequestException e) {
             responseEntity = new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
         }
+
+        log.info("Got: {} in thread {}", responseEntity, Thread.currentThread().getName());
         return responseEntity;
     }
 
@@ -63,8 +71,13 @@ public class FoodController {
      * @param foodId Unique ID of the food.
      */
     @GetMapping("/reports/{foodId}")
-    public ResponseEntity<List<FoodNutrient>> getNutrition(@PathVariable String foodId) {
+    public Mono<ResponseEntity<List<FoodNutrient>>> getNutrition(@PathVariable String foodId) {
         log.info("Search nutrient by using ndbNo: {}", foodId);
+
+        return Mono.fromCallable(() -> getDeferredNutrition(foodId)).subscribeOn(Schedulers.boundedElastic());
+    }
+
+    private ResponseEntity<List<FoodNutrient>> getDeferredNutrition(@PathVariable String foodId) {
         ResponseEntity<List<FoodNutrient>> responseEntity;
 
         try {
@@ -73,6 +86,8 @@ public class FoodController {
         } catch (ImproperRequestException e) {
             responseEntity = new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
         }
+
+        log.info("Got: {} in thread {}", responseEntity, Thread.currentThread().getName());
         return responseEntity;
     }
 

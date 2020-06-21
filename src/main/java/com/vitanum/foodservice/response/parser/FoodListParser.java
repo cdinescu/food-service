@@ -29,6 +29,7 @@ public class FoodListParser extends DataParser<Food> {
     @Override
     protected List<Food> getUsdaEntities(JsonParser parser, ObjectMapper objectMapper) throws IOException {
         FoodResponse foodResponse = objectMapper.readValue(parser, FoodResponse.class);
+        LOG.info("Extracted food response: {}", foodResponse);
         List<Food> foods = foodResponse.getFoods();
 
         return foods != null ? foods : new ArrayList<>();
