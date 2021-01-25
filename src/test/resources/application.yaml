@@ -11,9 +11,3 @@ api:
 
 response:
   format: json
-
-okta:
-  oauth2:
-    issuer: https://dev-961527.okta.com/oauth2/default
-    client-id: clientId
-    client-secret: clientSecret
