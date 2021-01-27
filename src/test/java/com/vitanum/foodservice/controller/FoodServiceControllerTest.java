@@ -14,127 +14,98 @@
 
 package com.vitanum.foodservice.controller;
 
-import com.vitanum.foodservice.controller.utils.WebTestControllerUtils;
-import org.junit.jupiter.api.BeforeEach;
+import com.vitanum.foodservice.constants.Constants;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.util.UriBuilder;
-import reactor.core.publisher.Mono;
 
-import java.net.URI;
-import java.util.Map;
-import java.util.function.Function;
-
-import static com.vitanum.foodservice.constants.Constants.FOOD_ID;
-import static com.vitanum.foodservice.constants.Constants.FOOD_REPORTS_URL;
-import static com.vitanum.foodservice.constants.Constants.FOOD_SEARCH_URL;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class FoodServiceControllerTest {
+public class FoodServiceControllerTest implements Constants {
 
     @Autowired
     private WebTestClient client;
 
-    @MockBean
-    private ReactiveJwtDecoder jwtDecoder;
-
-    private final Jwt myJwt = jwt("token");
-
-    @BeforeEach
-    void setUp() {
-        when(this.jwtDecoder.decode(anyString())).thenReturn(Mono.just(this.myJwt));
-    }
-
     @Test
     public void testGetFoodByGeneralSearchInput() {
-        // Arrange
-        Function<UriBuilder, URI> uriFunction = uriBuilder -> uriBuilder
-                .path(FOOD_SEARCH_URL)
-                .queryParam("foodSearchKeyword", "banana").build();
-
-        // Act & Assert
-        WebTestControllerUtils.checkAuthorizedAccess(client, uriFunction, myJwt, HttpStatus.OK);
-    }
-
-    @Test
-    public void testRequestWithoutToken() {
-        // Arrange
-        Function<UriBuilder, URI> uriFunction = uriBuilder -> uriBuilder
-                .path(FOOD_SEARCH_URL)
-                .queryParam("foodSearchKeyword", "banana").build();
-
-        // Act & Assert
-        WebTestControllerUtils.checkUnAuthorizedAccess(client, uriFunction);
+        WebTestClient.BodyContentSpec bodyContentSpec = client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(FOOD_SEARCH_URL)
+                        .queryParam("foodSearchKeyword", "banana").build())
+                .accept(APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(APPLICATION_JSON)
+                .expectBody();
     }
 
     @Test
     public void testGetFoodByGeneralSearchInputMultipleTokens() {
-        // Arrange
-        Function<UriBuilder, URI> uriFunction = uriBuilder -> uriBuilder
-                .path(FOOD_SEARCH_URL)
-                .queryParam("foodSearchKeyword", "Candies, dark chocolate coated coffee beans").build();
-
-        // Act & Assert
-        WebTestControllerUtils.checkAuthorizedAccess(client, uriFunction, myJwt, HttpStatus.OK);
+        client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(FOOD_SEARCH_URL)
+                        .queryParam("foodSearchKeyword", "Candies, dark chocolate coated coffee beans").build())
+                .accept(APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(APPLICATION_JSON)
+                .expectBody();
     }
 
     @Test
     public void testGetFoodByGeneralSearchInputWhenFoodNotFound() {
-        // Arrange
-        Function<UriBuilder, URI> uriFunction = uriBuilder -> uriBuilder
-                .path(FOOD_SEARCH_URL)
-                .queryParam("foodSearchKeyword", "heeeeeeeeeeeeey").build();
-
-        // Act & Assert
-        WebTestControllerUtils.checkAuthorizedAccess(client, uriFunction, myJwt, HttpStatus.NOT_FOUND);
+        client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(FOOD_SEARCH_URL)
+                        .queryParam("foodSearchKeyword", "heeeeeeeeeeeeey").build())
+                .accept(APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectHeader().contentType(APPLICATION_JSON)
+                .expectBody();
     }
 
     @Test
     public void testGetFoodByGeneralSearchInputWhenQueryParamEmpty() {
-        // Arrange
-        Function<UriBuilder, URI> uriFunction = uriBuilder -> uriBuilder
-                .path(FOOD_SEARCH_URL)
-                .queryParam("foodSearchKeyword", "").build();
-
-        // Act & Assert
-        WebTestControllerUtils.checkAuthorizedAccess(client, uriFunction, myJwt, HttpStatus.NOT_FOUND);
+        client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(FOOD_SEARCH_URL)
+                        .queryParam("foodSearchKeyword", "").build())
+                .accept(APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectHeader().contentType(APPLICATION_JSON)
+                .expectBody();
     }
 
     @Test
     public void testGetFoodNutrients() {
-        // Arrange
-        Function<UriBuilder, URI> uriFunction = uriBuilder -> uriBuilder
-                .path(FOOD_REPORTS_URL + "/" + FOOD_ID)
-                .build();
-
-        // Act & Assert
-        WebTestControllerUtils.checkAuthorizedAccess(client, uriFunction, myJwt, HttpStatus.OK);
+        client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(FOOD_REPORTS_URL + "/" + FOOD_ID)
+                        .build())
+                .accept(APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(APPLICATION_JSON)
+                .expectBody();
     }
 
     @Test
     public void testGetFoodNutrientsWhenFoodIndexHasWrongFormat() {
-        // Arrange
-        Function<UriBuilder, URI> uriFunction = uriBuilder -> uriBuilder
-                .path(FOOD_REPORTS_URL + "/random")
-                .build();
-
-        // Act & Assert
-        WebTestControllerUtils.checkAuthorizedAccess(client, uriFunction, myJwt, HttpStatus.NOT_FOUND);
-    }
-
-    private Jwt jwt(String tokenValue) {
-        return new Jwt(tokenValue, null, null,
-                Map.of("alg", "none"), Map.of("sub", "cristina"));
+        client.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(FOOD_REPORTS_URL + "/random")
+                        .build())
+                .accept(APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectHeader().contentType(APPLICATION_JSON)
+                .expectBody();
     }
 }
