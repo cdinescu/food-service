@@ -1,23 +1,10 @@
-/*
- * 	Copyright 2020 Cristina Dinescu
- * 	Licensed under the Apache License, Version 2.0 (the "License");
- * 	you may not use this file except in compliance with the License.
- * 	You may obtain a copy of the License at
- * 		http://www.apache.org/licenses/LICENSE-2.0
- * 	Unless required by applicable law or agreed to in writing, software
- * 	distributed under the License is distributed on an "AS IS" BASIS,
- * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * 	See the License for the specific language governing permissions and
- * 	limitations under the License.
- *
- */
-
 package com.vitanum.foodservice.controller;
 
 import com.vitanum.foodservice.constants.Constants;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -26,17 +13,20 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureWebTestClient(timeout = "10000")
 public class FoodServiceControllerTest implements Constants {
+
+    public static final String FOOD_SEARCH_KEYWORD = "foodSearchKeyword";
 
     @Autowired
     private WebTestClient client;
 
     @Test
     public void testGetFoodByGeneralSearchInput() {
-        WebTestClient.BodyContentSpec bodyContentSpec = client.get()
+        client.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(FOOD_SEARCH_URL)
-                        .queryParam("foodSearchKeyword", "banana").build())
+                        .queryParam(FOOD_SEARCH_KEYWORD, "banana").build())
                 .accept(APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -49,7 +39,7 @@ public class FoodServiceControllerTest implements Constants {
         client.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(FOOD_SEARCH_URL)
-                        .queryParam("foodSearchKeyword", "Candies, dark chocolate coated coffee beans").build())
+                        .queryParam(FOOD_SEARCH_KEYWORD, "Candies, dark chocolate coated coffee beans").build())
                 .accept(APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -62,7 +52,7 @@ public class FoodServiceControllerTest implements Constants {
         client.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(FOOD_SEARCH_URL)
-                        .queryParam("foodSearchKeyword", "heeeeeeeeeeeeey").build())
+                        .queryParam(FOOD_SEARCH_KEYWORD, "heeeeeeeeeeeeey").build())
                 .accept(APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isNotFound()
@@ -75,7 +65,7 @@ public class FoodServiceControllerTest implements Constants {
         client.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(FOOD_SEARCH_URL)
-                        .queryParam("foodSearchKeyword", "").build())
+                        .queryParam(FOOD_SEARCH_KEYWORD, "").build())
                 .accept(APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isNotFound()
