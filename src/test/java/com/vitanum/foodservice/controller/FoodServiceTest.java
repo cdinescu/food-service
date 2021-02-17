@@ -71,3 +71,4 @@ public class FoodServiceTest {
         foodNutrients.forEach(nutrient -> LOG.info("Nutrient {}", nutrient));
     }
 }
+
