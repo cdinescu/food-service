@@ -1,31 +1,21 @@
-/*
- * 	Copyright 2020 Cristina Dinescu
- * 	Licensed under the Apache License, Version 2.0 (the "License");
- * 	you may not use this file except in compliance with the License.
- * 	You may obtain a copy of the License at
- * 		http://www.apache.org/licenses/LICENSE-2.0
- * 	Unless required by applicable law or agreed to in writing, software
- * 	distributed under the License is distributed on an "AS IS" BASIS,
- * 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * 	See the License for the specific language governing permissions and
- * 	limitations under the License.
- *
- */
-
 package com.vitanum.foodservice.controller;
 
 import com.vitanum.foodservice.entities.Food;
 import com.vitanum.foodservice.entities.FoodNutrient;
 import com.vitanum.foodservice.exceptions.ImproperRequestException;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
@@ -38,6 +28,8 @@ import java.util.List;
 public class FoodController {
     @Autowired
     private FoodService foodService;
+
+    private static final String MAIN_SERVICE = "mainService";
 
     /**
      * Search a certain food by providing an input string
@@ -52,7 +44,8 @@ public class FoodController {
                 .publishOn(Schedulers.boundedElastic());
     }
 
-    private ResponseEntity<List<Food>> getDeferredListResponseEntity(@RequestParam String foodSearchKeyword, @RequestParam(required = false, defaultValue = "0") Integer pageNumber) {
+    private ResponseEntity<List<Food>> getDeferredListResponseEntity(@RequestParam String foodSearchKeyword,
+                                                                     @RequestParam(required = false, defaultValue = "0") Integer pageNumber) {
         ResponseEntity<List<Food>> responseEntity;
 
         try {
@@ -72,7 +65,8 @@ public class FoodController {
      * @param foodId Unique ID of the food.
      */
     @GetMapping("/reports/{foodId}")
-    public Mono<ResponseEntity<List<FoodNutrient>>> getNutrition(@PathVariable String foodId) {
+    //@CircuitBreaker(name = MAIN_SERVICE)
+    public Mono<ResponseEntity<List<FoodNutrient>>> getNutrition(@PathVariable String foodId) throws InterruptedException {
         log.info("Search nutrient by using ndbNo: {}", foodId);
 
         return Mono.fromCallable(() -> getDeferredNutrition(foodId))
@@ -95,5 +89,29 @@ public class FoodController {
 
     private HttpStatus getHttpStatusBasedOnResult(List<?> list) {
         return list != null && list.isEmpty() ? HttpStatus.NOT_FOUND : HttpStatus.OK;
+    }
+
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Bean
+    public RestTemplate getRestTemplate() {
+        return new RestTemplate();
+    }
+
+    @GetMapping("/getSleuthTest")
+    @ResponseStatus(HttpStatus.OK)
+    @CircuitBreaker(name = MAIN_SERVICE, fallbackMethod="testFallBack")
+    public ResponseEntity<String> getSleuthTest() throws InterruptedException {
+        log.info("I'm here in main service calling service one");
+        String response = restTemplate.getForObject("http://localhost:8081/serviceOne", String.class);
+        return new ResponseEntity<String>(response, HttpStatus.OK);
+
+    }
+
+
+    private  ResponseEntity<String> testFallBack(Exception e){
+        return new ResponseEntity<String>("In fallback method", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
