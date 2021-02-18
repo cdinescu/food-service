@@ -11,10 +11,3 @@ api:
 
 response:
   format: json
-
-spring:
-  cloud:
-    config:
-      enabled: false
-    discovery:
-      enabled: false
